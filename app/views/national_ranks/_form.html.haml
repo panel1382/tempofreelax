@@ -1,0 +1,25 @@
+= form_for @national_rank do |f|
+  - if @national_rank.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@national_rank.errors.count, "error")} prohibited this national_rank from being saved:"
+      %ul
+        - @national_rank.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field
+    = f.label :stat_id
+    = f.number_field :stat_id
+  .field
+    = f.label :team_id
+    = f.number_field :team_id
+  .field
+    = f.label :annual_stat_id
+    = f.number_field :annual_stat_id
+  .field
+    = f.label :year
+    = f.number_field :year
+  .field
+    = f.label :rank
+    = f.number_field :rank
+  .actions
+    = f.submit 'Save'

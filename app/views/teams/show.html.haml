@@ -1,0 +1,42 @@
+%p#notice= notice
+
+%h1
+  = @team.name
+  \/
+  = @year
+%p
+  %b Conference:
+  = @team.conference.name if @team.conference
+%p
+  %b Home field:
+  = @team.home_field
+  
+%table
+  %thead
+    %th Opponent
+    %th Date
+    %th Score
+    %th Possessions
+    %th Possession %
+    %th Offensive Eff.
+    %th Defensive Eff.
+    %th Off Clear %
+    %th Def Clear %
+  %tbody
+    - @schedule.each do |game|
+      -us = define_which game, @team.id, :us
+      -them = define_which game, @team.id, :them
+      %tr
+        %td= opp(game, us)
+        %td= game.date.strftime('%-m/%-d/%y').gsub('^0','')
+        %td= "#{game.goals(us)}-#{game.goals(them)}"
+        %td= game.possessions(us)+game.possessions(them)
+        %td= "#{game.pos_percentage(us)}%"
+        %td= game.offensive_efficiency(us)
+        %td= game.offensive_efficiency(them)
+        %td= "#{game.offensive_clear_rate(us)}%"
+        %td= "#{game.offensive_clear_rate(them)}%"
+
+= link_to 'Edit', edit_team_path(@team)
+\|
+= link_to 'Back', "/stats/#{@year}"

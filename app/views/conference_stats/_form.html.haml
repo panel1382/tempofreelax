@@ -1,0 +1,118 @@
+= form_for @conference_stat do |f|
+  - if @conference_stat.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@conference_stat.errors.count, "error")} prohibited this conference_stat from being saved:"
+      %ul
+        - @conference_stat.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field
+    = f.label :team_id
+    = f.number_field :team_id
+  .field
+    = f.label :conference_id
+    = f.number_field :conference_id
+  .field
+    = f.label :as_id
+    = f.number_field :as_id
+  .field
+    = f.label :rank_id
+    = f.number_field :rank_id
+  .field
+    = f.label :year
+    = f.date_select :year
+  .field
+    = f.label :games
+    = f.number_field :games
+  .field
+    = f.label :wins
+    = f.number_field :wins
+  .field
+    = f.label :goals
+    = f.number_field :goals
+  .field
+    = f.label :shot_attempts
+    = f.number_field :shot_attempts
+  .field
+    = f.label :shots_on_goal
+    = f.number_field :shots_on_goal
+  .field
+    = f.label :assists
+    = f.number_field :assists
+  .field
+    = f.label :faceoffs_won
+    = f.number_field :faceoffs_won
+  .field
+    = f.label :opp_faceoffs_won
+    = f.number_field :opp_faceoffs_won
+  .field
+    = f.label :clear_attempts
+    = f.number_field :clear_attempts
+  .field
+    = f.label :clear_success
+    = f.number_field :clear_success
+  .field
+    = f.label :extra_man_opportunities
+    = f.number_field :extra_man_opportunities
+  .field
+    = f.label :extra_man_goals
+    = f.number_field :extra_man_goals
+  .field
+    = f.label :opp_extra_man_opportunities
+    = f.number_field :opp_extra_man_opportunities
+  .field
+    = f.label :man_down_goals
+    = f.number_field :man_down_goals
+  .field
+    = f.label :opp_goals
+    = f.number_field :opp_goals
+  .field
+    = f.label :opp_shot_attempts
+    = f.number_field :opp_shot_attempts
+  .field
+    = f.label :opp_shots_on_goal
+    = f.number_field :opp_shots_on_goal
+  .field
+    = f.label :opp_assists
+    = f.number_field :opp_assists
+  .field
+    = f.label :opp_extra_man_goals
+    = f.number_field :opp_extra_man_goals
+  .field
+    = f.label :opp_clear_attempts
+    = f.number_field :opp_clear_attempts
+  .field
+    = f.label :opp_clear_success
+    = f.number_field :opp_clear_success
+  .field
+    = f.label :opp_man_down_goals
+    = f.number_field :opp_man_down_goals
+  .field
+    = f.label :def_adj
+    = f.text_field :def_adj
+  .field
+    = f.label :off_adj
+    = f.text_field :off_adj
+  .field
+    = f.label :conference_id
+    = f.number_field :conference_id
+  .field
+    = f.label :ground_balls
+    = f.number_field :ground_balls
+  .field
+    = f.label :opp_ground_balls
+    = f.number_field :opp_ground_balls
+  .field
+    = f.label :turnovers
+    = f.number_field :turnovers
+  .field
+    = f.label :opp_turnovers
+    = f.number_field :opp_turnovers
+  .field
+    = f.label :caused_turnovers
+    = f.number_field :caused_turnovers
+  .field
+    = f.label :opp_caused_turnovers
+    = f.number_field :opp_caused_turnovers
+  .actions
+    = f.submit 'Save'

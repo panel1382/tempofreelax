@@ -1,0 +1,114 @@
+%p#notice= notice
+
+%p
+  %b Team:
+  = @conference_stat.team_id
+%p
+  %b Conference:
+  = @conference_stat.conference_id
+%p
+  %b As:
+  = @conference_stat.as_id
+%p
+  %b Rank:
+  = @conference_stat.rank_id
+%p
+  %b Year:
+  = @conference_stat.year
+%p
+  %b Games:
+  = @conference_stat.games
+%p
+  %b Wins:
+  = @conference_stat.wins
+%p
+  %b Goals:
+  = @conference_stat.goals
+%p
+  %b Shot attempts:
+  = @conference_stat.shot_attempts
+%p
+  %b Shots on goal:
+  = @conference_stat.shots_on_goal
+%p
+  %b Assists:
+  = @conference_stat.assists
+%p
+  %b Faceoffs won:
+  = @conference_stat.faceoffs_won
+%p
+  %b Opp faceoffs won:
+  = @conference_stat.opp_faceoffs_won
+%p
+  %b Clear attempts:
+  = @conference_stat.clear_attempts
+%p
+  %b Clear success:
+  = @conference_stat.clear_success
+%p
+  %b Extra man opportunities:
+  = @conference_stat.extra_man_opportunities
+%p
+  %b Extra man goals:
+  = @conference_stat.extra_man_goals
+%p
+  %b Opp extra man opportunities:
+  = @conference_stat.opp_extra_man_opportunities
+%p
+  %b Man down goals:
+  = @conference_stat.man_down_goals
+%p
+  %b Opp goals:
+  = @conference_stat.opp_goals
+%p
+  %b Opp shot attempts:
+  = @conference_stat.opp_shot_attempts
+%p
+  %b Opp shots on goal:
+  = @conference_stat.opp_shots_on_goal
+%p
+  %b Opp assists:
+  = @conference_stat.opp_assists
+%p
+  %b Opp extra man goals:
+  = @conference_stat.opp_extra_man_goals
+%p
+  %b Opp clear attempts:
+  = @conference_stat.opp_clear_attempts
+%p
+  %b Opp clear success:
+  = @conference_stat.opp_clear_success
+%p
+  %b Opp man down goals:
+  = @conference_stat.opp_man_down_goals
+%p
+  %b Def adj:
+  = @conference_stat.def_adj
+%p
+  %b Off adj:
+  = @conference_stat.off_adj
+%p
+  %b Conference:
+  = @conference_stat.conference_id
+%p
+  %b Ground balls:
+  = @conference_stat.ground_balls
+%p
+  %b Opp ground balls:
+  = @conference_stat.opp_ground_balls
+%p
+  %b Turnovers:
+  = @conference_stat.turnovers
+%p
+  %b Opp turnovers:
+  = @conference_stat.opp_turnovers
+%p
+  %b Caused turnovers:
+  = @conference_stat.caused_turnovers
+%p
+  %b Opp caused turnovers:
+  = @conference_stat.opp_caused_turnovers
+
+= link_to 'Edit', edit_conference_stat_path(@conference_stat)
+\|
+= link_to 'Back', conference_stats_path

@@ -1,0 +1,33 @@
+-title @conference_stats.first.conference.name
+
+%table.sortable.persist-area
+  %thead.persist-header
+    %tr
+      %th Team
+      %th W-L
+      %th Pyth
+      %th Off. Eff.
+      %th Def. Eff.
+      %th Pace
+      %th Pos. %
+      %th Faceoff %
+      %th Off Clear %
+      %th Def Clear %
+  
+  %tbody  
+    - @conference_stats.each do |a|
+      %tr
+        %td= link_to a.team.name, "/teams/#{@year}/#{a.team.id}"
+        %td= "#{a.wins}-#{a.losses}"
+        %td= stat_with_rank(:pyth, a, true)
+        %td= stat_with_rank(:adjusted_offensive_efficiency, a)
+        %td= stat_with_rank(:adjusted_defensive_efficiency, a)
+        %td= stat_with_rank(:pace, a)
+        %td= stat_with_rank(:pos_percentage, a, true)
+        %td= stat_with_rank(:faceoff_percentage, a, true)
+        %td= stat_with_rank(:offensive_clear_rate, a, true)
+        %td= stat_with_rank(:defensive_clear_rate, a, true)
+      
+%br
+
+= link_to 'New Annual stat', new_annual_stat_path

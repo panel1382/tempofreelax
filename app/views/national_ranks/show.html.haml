@@ -1,0 +1,21 @@
+%p#notice= notice
+
+%p
+  %b Stat:
+  = @national_rank.stat_id
+%p
+  %b Team:
+  = @national_rank.team_id
+%p
+  %b Annual stat:
+  = @national_rank.annual_stat_id
+%p
+  %b Year:
+  = @national_rank.year
+%p
+  %b Rank:
+  = @national_rank.rank
+
+= link_to 'Edit', edit_national_rank_path(@national_rank)
+\|
+= link_to 'Back', national_ranks_path

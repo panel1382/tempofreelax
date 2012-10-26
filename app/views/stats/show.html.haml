@@ -1,0 +1,12 @@
+%p#notice= notice
+
+%p
+  %b Name:
+  = @stat.name
+%p
+  %b Description:
+  = @stat.description
+
+= link_to 'Edit', edit_stat_path(@stat)
+\|
+= link_to 'Back', stats_path

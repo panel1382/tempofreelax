@@ -1,0 +1,23 @@
+%h1 Listing teams
+
+%table
+  %tr
+    %th Team name
+    %th Conference
+    %th Home field
+    %th
+    %th
+    %th
+
+  - @teams.each do |team|
+    %tr
+      %td= link_to team.name, team
+      %td= team.conference.name if team.conference
+      %td= team.home_field
+      %td= link_to 'Show', team
+      %td= link_to 'Edit', edit_team_path(team)
+      %td= link_to 'Destroy', team, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Team', new_team_path

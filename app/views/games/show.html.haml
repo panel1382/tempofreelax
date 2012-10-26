@@ -1,0 +1,25 @@
+%p#notice= notice
+%p
+  %b ID:
+  = @game.id
+%p
+  %b Home team:
+  = @game.home_team
+%p
+  %b Away team:
+  = @game.away_team
+%p
+  %b Year:
+  = @game.date.year
+%p
+  %b Venue:
+  = @game.venue
+%p
+  %b Date:
+  = @game.date
+
+= link_to 'Edit', edit_game_path(@game)
+\|
+= link_to 'Back', games_path
+
+%h1 the ehll

@@ -1,0 +1,23 @@
+%h1 Listing stats
+
+%table
+  %tr
+    %th Name
+    %th Description
+    %th Slug
+    %th
+    %th
+    %th
+
+  - @stats.each do |stat|
+    %tr
+      %td= stat.name
+      %td= stat.description
+      %td= stat.slug
+      %td= link_to 'Show', stat
+      %td= link_to 'Edit', edit_stat_path(stat)
+      %td= link_to 'Destroy', stat, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Stat', new_stat_path

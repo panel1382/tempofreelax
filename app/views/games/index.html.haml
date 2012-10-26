@@ -1,0 +1,27 @@
+=title "Games"
+
+%p.pagination= paginate @games
+
+%table
+  %tr
+    %th Score
+    %th Home team
+    %th Away team
+    %th Venue
+    %th Date
+
+  - @games.each do |game|
+    -home = Team.find(game.home_team)
+    -away = Team.find(game.away_team)
+    %tr
+      %td= link_to "#{game.game_stats[0].goals}-#{game.game_stats[1].goals}", game
+      %td= link_to home.name, team_path(home, :year => game.date.year)
+      %td= link_to away.name, team_path(away, :year => game.date.year)
+      %td= game.venue
+      %td= game.date.strftime "%m/%d/%Y"
+
+%br
+
+%p.pagination= paginate @games
+
+= link_to 'New Game', new_game_path

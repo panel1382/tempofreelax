@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  home_team: 1
+  away_team: 1
+  year: 2012-10-16
+  venue: MyString
+  date: 2012-10-16
+
+two:
+  home_team: 1
+  away_team: 1
+  year: 2012-10-16
+  venue: MyString
+  date: 2012-10-16

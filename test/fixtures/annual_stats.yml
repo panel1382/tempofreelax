@@ -1,0 +1,61 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  team_id: 1
+  rank_id: 1
+  year: 2012-10-16
+  games: 1
+  wins: 1
+  goals: 1
+  shot_attempts: 1
+  shots_on_goal: 1
+  assists: 1
+  faceoffs_won: 1
+  opp_faceoffs_won: 1
+  clear_attempts: 1
+  clear_success: 
+  extra_man_opportunities: 1
+  extra_man_goals: 1
+  opp_extra_man_opportunities: 1
+  man_down_goals: 1
+  opp_goals: 1
+  opp_shot_attempts: 1
+  opp_shots_on_goal: 1
+  opp_assists: 1
+  opp_extra_man_goals: 1
+  opp_clear_attempts: 1
+  opp_clear_success: 1
+  opp_man_down_goals: 1
+  def_adj: 1.5
+  off_adj: 1.5
+  conference_id: 1
+
+two:
+  team_id: 1
+  rank_id: 1
+  year: 2012-10-16
+  games: 1
+  wins: 1
+  goals: 1
+  shot_attempts: 1
+  shots_on_goal: 1
+  assists: 1
+  faceoffs_won: 1
+  opp_faceoffs_won: 1
+  clear_attempts: 1
+  clear_success: 
+  extra_man_opportunities: 1
+  extra_man_goals: 1
+  opp_extra_man_opportunities: 1
+  man_down_goals: 1
+  opp_goals: 1
+  opp_shot_attempts: 1
+  opp_shots_on_goal: 1
+  opp_assists: 1
+  opp_extra_man_goals: 1
+  opp_clear_attempts: 1
+  opp_clear_success: 1
+  opp_man_down_goals: 1
+  def_adj: 1.5
+  off_adj: 1.5
+  conference_id: 1

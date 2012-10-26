@@ -1,0 +1,25 @@
+= form_for @stat do |f|
+  - if @stat.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@stat.errors.count, "error")} prohibited this stat from being saved:"
+      %ul
+        - @stat.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  .field
+    = f.label :abbreviation
+    = f.text_field :abbreviation
+  .field
+    = f.label :slug
+    = f.text_field :slug
+  .field
+    = f.label :order, "Sort Order: "
+    = f.select( :order, options_for_select([['Ascending','ascending'],['Descending','descending']]))
+  .field
+    = f.label :description
+    = f.text_area :description
+  .actions
+    = f.submit 'Save'

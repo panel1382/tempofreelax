@@ -1,0 +1,95 @@
+/* Welcome to Compass.
+ * In this file you should write your main styles. (or centralize your imports)
+ * Import this file using the following HTML or equivalent:
+ * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+
+@import "compass/reset";
+@import "compass/utilities/tables";
+
+$bg: #103C72;
+
+body{
+  background-color: $bg;
+  font-size: 18px;
+  line-height: 24px;
+  font-family: 'Source Sans Pro', 'Helvetica', 'Arial', sans-serif;
+  font-weight: 500;
+}
+
+.container{
+  background:#fff;
+  width:85%;
+  margin: 0 auto;
+  padding: 0 0 2em;
+}
+
+.content{
+  padding:0 1em;
+}
+
+p{
+  margin:.25em 0 .75em;
+}
+
+h1,h2,h3,h4,h5,h6{
+  clear:both;
+  margin: .5em 0 1em;
+} 
+
+h2{
+  color: white;
+  font-size: 1.8em;
+  line-height: 2.2em;
+  font-weight: bold;
+  text-shadow: 0px -1px  black;
+  padding-left: 1em;
+  margin-bottom: 0;
+  border-bottom: 3px solid black;
+  background: $bg
+}
+
+a{
+  &:link{
+    color: tint($bg, 20%);
+  }
+  &:visited{
+    color: shade($bg, 50%);
+  }
+  &:hover{
+    color: black
+  }
+}
+
+table{
+  @include table-scaffolding;
+  font-size: .9em;
+  line-height: 1em;
+  margin: .5em 0;
+  td, th{
+    padding:.5em .25em;
+  }
+  thead{
+    border-bottom: 3px solid black;
+  }
+  th{
+    background-color:$bg;
+    color:#eee;
+    text-shadow:0 -1px 0 black
+    
+  }
+  
+  tr:nth-child(even){
+    background-color:#eee
+  }
+  width:100%;
+  td{
+    text-align: right;
+    &:first-child{
+      text-align: left;
+    }
+  }
+}
+
+.pagination{
+  text-align: center
+}

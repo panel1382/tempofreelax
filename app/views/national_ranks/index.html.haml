@@ -1,0 +1,27 @@
+%h1 Listing national_ranks
+
+%table
+  %tr
+    %th Stat
+    %th Team
+    %th Annual stat
+    %th Year
+    %th Rank
+    %th
+    %th
+    %th
+
+  - @national_ranks.each do |national_rank|
+    %tr
+      %td= national_rank.stat_id
+      %td= national_rank.team_id
+      %td= national_rank.annual_stat_id
+      %td= national_rank.year
+      %td= national_rank.rank
+      %td= link_to 'Show', national_rank
+      %td= link_to 'Edit', edit_national_rank_path(national_rank)
+      %td= link_to 'Destroy', national_rank, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New National rank', new_national_rank_path

@@ -1,0 +1,51 @@
+%p#notice= notice
+
+%p
+  %b Team:
+  = @game_stat.team_id
+%p
+  %b Home:
+  = @game_stat.home
+%p
+  %b Game:
+  = @game_stat.game_id
+%p
+  %b Goals:
+  = @game_stat.goals
+%p
+  %b Shot attempts:
+  = @game_stat.shot_attempts
+%p
+  %b Shots on goal:
+  = @game_stat.shots_on_goal
+%p
+  %b Assists:
+  = @game_stat.assists
+%p
+  %b Faceoffs won:
+  = @game_stat.faceoffs_won
+%p
+  %b Faceoff percentage:
+  = @game_stat.faceoff_percentage
+%p
+  %b Clear attempts:
+  = @game_stat.clear_attempts
+%p
+  %b Clear success:
+  = @game_stat.clear_success
+%p
+  %b Extra man opportunities:
+  = @game_stat.extra_man_opportunities
+%p
+  %b Extra man goals:
+  = @game_stat.extra_man_goals
+%p
+  %b Man down goals:
+  = @game_stat.man_down_goals
+%p
+  %b Penalties:
+  = @game_stat.penalties
+
+= link_to 'Edit', edit_game_stat_path(@game_stat)
+\|
+= link_to 'Back', game_stats_path

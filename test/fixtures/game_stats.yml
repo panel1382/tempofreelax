@@ -1,0 +1,35 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  team_id: 1
+  home: false
+  game_id: 1
+  goals: 1
+  shot_attempts: 1
+  shots_on_goal: 1
+  assists: 1
+  faceoffs_won: 1
+  faceoff_percentage: 1.5
+  clear_attempts: 1
+  clear_success: 1
+  extra_man_opportunities: 1
+  extra_man_goals: 1
+  man_down_goals: 1
+  penalties: 1
+
+two:
+  team_id: 1
+  home: false
+  game_id: 1
+  goals: 1
+  shot_attempts: 1
+  shots_on_goal: 1
+  assists: 1
+  faceoffs_won: 1
+  faceoff_percentage: 1.5
+  clear_attempts: 1
+  clear_success: 1
+  extra_man_opportunities: 1
+  extra_man_goals: 1
+  man_down_goals: 1
+  penalties: 1

@@ -1,0 +1,47 @@
+%h1 Listing game_stats
+
+%table
+  %tr
+    %th Team
+    %th Home
+    %th Game
+    %th Goals
+    %th Shot attempts
+    %th Shots on goal
+    %th Assists
+    %th Faceoffs won
+    %th Faceoff percentage
+    %th Clear attempts
+    %th Clear success
+    %th Extra man opportunities
+    %th Extra man goals
+    %th Man down goals
+    %th Penalties
+    %th
+    %th
+    %th
+
+  - @game_stats.each do |game_stat|
+    %tr
+      %td= game_stat.team_id
+      %td= game_stat.home
+      %td= game_stat.game_id
+      %td= game_stat.goals
+      %td= game_stat.shot_attempts
+      %td= game_stat.shots_on_goal
+      %td= game_stat.assists
+      %td= game_stat.faceoffs_won
+      %td= game_stat.faceoff_percentage
+      %td= game_stat.clear_attempts
+      %td= game_stat.clear_success
+      %td= game_stat.extra_man_opportunities
+      %td= game_stat.extra_man_goals
+      %td= game_stat.man_down_goals
+      %td= game_stat.penalties
+      %td= link_to 'Show', game_stat
+      %td= link_to 'Edit', edit_game_stat_path(game_stat)
+      %td= link_to 'Destroy', game_stat, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Game stat', new_game_stat_path

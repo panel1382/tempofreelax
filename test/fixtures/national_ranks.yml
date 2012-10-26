@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  stat_id: 1
+  team_id: 1
+  annual_stat_id: 1
+  year: 1
+  rank: 1
+
+two:
+  stat_id: 1
+  team_id: 1
+  annual_stat_id: 1
+  year: 1
+  rank: 1

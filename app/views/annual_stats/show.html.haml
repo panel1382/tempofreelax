@@ -1,0 +1,90 @@
+%p#notice= notice
+
+%p
+  %b Team:
+  = @annual_stat.team_id
+%p
+  %b Rank:
+  = @annual_stat.rank_id
+%p
+  %b Year:
+  = @annual_stat.year
+%p
+  %b Games:
+  = @annual_stat.games
+%p
+  %b Wins:
+  = @annual_stat.wins
+%p
+  %b Goals:
+  = @annual_stat.goals
+%p
+  %b Shot attempts:
+  = @annual_stat.shot_attempts
+%p
+  %b Shots on goal:
+  = @annual_stat.shots_on_goal
+%p
+  %b Assists:
+  = @annual_stat.assists
+%p
+  %b Faceoffs won:
+  = @annual_stat.faceoffs_won
+%p
+  %b Opp faceoffs won:
+  = @annual_stat.opp_faceoffs_won
+%p
+  %b Clear attempts:
+  = @annual_stat.clear_attempts
+%p
+  %b Clear success:
+  = @annual_stat.clear_success
+%p
+  %b Extra man opportunities:
+  = @annual_stat.extra_man_opportunities
+%p
+  %b Extra man goals:
+  = @annual_stat.extra_man_goals
+%p
+  %b Opp extra man opportunities:
+  = @annual_stat.opp_extra_man_opportunities
+%p
+  %b Man down goals:
+  = @annual_stat.man_down_goals
+%p
+  %b Opp goals:
+  = @annual_stat.opp_goals
+%p
+  %b Opp shot attempts:
+  = @annual_stat.opp_shot_attempts
+%p
+  %b Opp shots on goal:
+  = @annual_stat.opp_shots_on_goal
+%p
+  %b Opp assists:
+  = @annual_stat.opp_assists
+%p
+  %b Opp extra man goals:
+  = @annual_stat.opp_extra_man_goals
+%p
+  %b Opp clear attempts:
+  = @annual_stat.opp_clear_attempts
+%p
+  %b Opp clear success:
+  = @annual_stat.opp_clear_success
+%p
+  %b Opp man down goals:
+  = @annual_stat.opp_man_down_goals
+%p
+  %b Def adj:
+  = @annual_stat.def_adj
+%p
+  %b Off adj:
+  = @annual_stat.off_adj
+%p
+  %b Conference:
+  = @annual_stat.conference_id
+
+= link_to 'Edit', edit_annual_stat_path(@annual_stat)
+\|
+= link_to 'Back', annual_stats_path
