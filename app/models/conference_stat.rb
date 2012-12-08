@@ -82,8 +82,8 @@ class ConferenceStat < ActiveRecord::Base
     conference = Conference.find(Team.find(team_id).conference_id)
     teams = []
     conference.teams.each {|team| teams.push team.id}
-    home_games = Game.where(:home_team => team_id, :away_team => teams).all
-    away_games = Game.where(:away_team => team_id, :home_team => teams).all
+    home_games = Game.where(:home_team => team_id, :away_team => teams, :year => year).all
+    away_games = Game.where(:away_team => team_id, :home_team => teams, :year => year).all
     if home_games.length + away_games.length > 0
     
       us = actual_hash

@@ -158,7 +158,7 @@ namespace :bg do
     games = []
     teams.each_with_index do |teamid, i|
       
-        url = "http://stats.ncaa.org/team/index/10500?org_id=#{teamid}"
+        url = "http://stats.ncaa.org/team/index/10301?org_id=#{teamid}"
         response = conn.get url
         dom = Nokogiri::HTML(response.body)
         dom.css('.smtext:nth-child(3) a').each {|link| games.push link['href'].split('/').last.split('?').first}
@@ -198,11 +198,11 @@ namespace :bg do
   end
   
   task :random => :environment do
-    #AnnualStat.sum_all(2011)
+    #AnnualStat.sum_all(2010)
     #ConferenceStat.sum_all(2011)
     #s = AnnualStat.where(:year => '2011-01-01').all
     #s.each {|as| as.rank_all if as.ranks.length == 0}
-    ConferenceStat.rank_all(2012)
+    #ConferenceStat.rank_all(2012)
     #ConferenceStat.sum_conference(10, 2012)
     #ConferenceStat.where(:conference_id => 10).each{ |c| c.rank_all}
     #teams = Team.where(:name => 'Air Force').all
@@ -210,6 +210,30 @@ namespace :bg do
     
     #game = Game.find_by_ncaa_id('1022271')
     #puts game.id
+    
+    games = Game.select('home_team').uniq
+    arr = []
+    c = games.each do |a|
+      team = Team.find(a.home_team)
+      if team.name.is_a? String
+        if team.name.match(/ +$/)
+          arr.push team.name if !team.name.nil?
+        end
+      end
+    end
+    
+    puts arr.inspect
+=begin
+    arr.each do |team|
+      old = team.id
+      new_id = Team.where(:name => team.name.gsub(/ +$/,'')).first.id
+      
+      games = Game.where(:home_team => old).all
+      games.each{ |g| g.home_team = new_id; g.save }
+      games = Game.where(:away_team => old).all
+      games.each{ |g| g.home_team = new_id; g.save } 
+    end
+=end
   end
   
   task :fix => :environment do

@@ -9,7 +9,8 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
   def self.sum_all(year)
     start = Date.new(year,1,1)
     finish = Date.new(year,12,31)
-    a = Game.where(:date => start..finish).select('home_team').uniq
+    a = Game.where(:date => start..finish)
+    puts a.inspect
     
     a.each_with_index do |team, i|
       stat = AnnualStat.where(:team_id => team.home_team, :year => stat).first

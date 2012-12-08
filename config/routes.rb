@@ -21,6 +21,8 @@ Tempofreelax::Application.routes.draw do
   match 'stats/:year' => 'annual_stats#index'
   match 'stats/' => 'annual_stats#index'
   match 'conf_stats/:conference_id/:year' => 'conference_stats#index'
+  match 'games/:year/page/:page' => 'games#index'
+  match 'games/:year' => 'games#index'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

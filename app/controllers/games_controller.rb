@@ -2,8 +2,9 @@ class GamesController < ApplicationController
   # GET /games
   # GET /games.json
   def index
+    params[:year] ? range = Date.new(params[:year].to_i,1,1)..Date.new(params[:year].to_i,12,31) : range = Date.new(1900,1,1)..Date.new(3000,12,31)
     params[:page] ? @page = params[:page] : @page = 1
-    @games = Game.order('`date` ASC').page(@page)
+    @games = Game.where(:date => range).order('`date` ASC').page(@page)
     
     respond_to do |format|
       format.html # index.html.erb
