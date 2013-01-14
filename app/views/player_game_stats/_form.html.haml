@@ -1,0 +1,67 @@
+= form_for @player_game_stat do |f|
+  - if @player_game_stat.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@player_game_stat.errors.count, "error")} prohibited this player_game_stat from being saved:"
+      %ul
+        - @player_game_stat.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field
+    = f.label :player_id
+    = f.number_field :player_id
+  .field
+    = f.label :game_id
+    = f.number_field :game_id
+  .field
+    = f.label :goals
+    = f.number_field :goals
+  .field
+    = f.label :assists
+    = f.number_field :assists
+  .field
+    = f.label :shots
+    = f.number_field :shots
+  .field
+    = f.label :shots_on_goal
+    = f.number_field :shots_on_goal
+  .field
+    = f.label :ground_balls
+    = f.number_field :ground_balls
+  .field
+    = f.label :turnovers
+    = f.number_field :turnovers
+  .field
+    = f.label :caused_turnovers
+    = f.number_field :caused_turnovers
+  .field
+    = f.label :faceoff_wins
+    = f.number_field :faceoff_wins
+  .field
+    = f.label :faceoffs_taken
+    = f.number_field :faceoffs_taken
+  .field
+    = f.label :penalties
+    = f.number_field :penalties
+  .field
+    = f.label :penalty_seconds
+    = f.number_field :penalty_seconds
+  .field
+    = f.label :goalie_seconds
+    = f.number_field :goalie_seconds
+  .field
+    = f.label :goals_allowed
+    = f.number_field :goals_allowed
+  .field
+    = f.label :saves
+    = f.number_field :saves
+  .field
+    = f.label :wins
+    = f.number_field :wins
+  .field
+    = f.label :losses
+    = f.number_field :losses
+  .field
+    = f.label :ties
+    = f.number_field :ties
+  .actions
+    = f.submit 'Save'

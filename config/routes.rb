@@ -1,4 +1,8 @@
 Tempofreelax::Application.routes.draw do
+  resources :player_game_stats
+
+  resources :players
+
   resources :conference_stats
 
   #resources :stats
@@ -72,7 +76,7 @@ Tempofreelax::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  # root :to => 'welcome#index'
+   root :to => 'annual_stats#index'
 
   # See how all your routes lay out with "rake routes"
 

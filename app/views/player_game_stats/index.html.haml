@@ -1,0 +1,55 @@
+%h1 Listing player_game_stats
+
+%table
+  %tr
+    %th Player
+    %th Game
+    %th Goals
+    %th Assists
+    %th Shots
+    %th Shots on goal
+    %th Ground balls
+    %th Turnovers
+    %th Caused turnovers
+    %th Faceoff wins
+    %th Faceoffs taken
+    %th Penalties
+    %th Penalty seconds
+    %th Goalie seconds
+    %th Goals allowed
+    %th Saves
+    %th Wins
+    %th Losses
+    %th Ties
+    %th
+    %th
+    %th
+
+  - @player_game_stats.each do |player_game_stat|
+    %tr
+      %td= player_game_stat.player_id
+      %td= player_game_stat.game_id
+      %td= player_game_stat.goals
+      %td= player_game_stat.assists
+      %td= player_game_stat.shots
+      %td= player_game_stat.shots_on_goal
+      %td= player_game_stat.ground_balls
+      %td= player_game_stat.turnovers
+      %td= player_game_stat.caused_turnovers
+      %td= player_game_stat.faceoff_wins
+      %td= player_game_stat.faceoffs_taken
+      %td= player_game_stat.penalties
+      %td= player_game_stat.penalty_seconds
+      %td= player_game_stat.goalie_seconds
+      %td= player_game_stat.goals_allowed
+      %td= player_game_stat.saves
+      %td= player_game_stat.wins
+      %td= player_game_stat.losses
+      %td= player_game_stat.ties
+      %td= link_to 'Show', player_game_stat
+      %td= link_to 'Edit', edit_player_game_stat_path(player_game_stat)
+      %td= link_to 'Destroy', player_game_stat, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Player game stat', new_player_game_stat_path

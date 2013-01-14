@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121024200627) do
+ActiveRecord::Schema.define(:version => 20130113212009) do
 
   create_table "annual_stats", :force => true do |t|
     t.integer  "team_id"
@@ -155,6 +155,38 @@ ActiveRecord::Schema.define(:version => 20121024200627) do
     t.datetime "created_at",                        :null => false
     t.datetime "updated_at",                        :null => false
     t.boolean  "conference",     :default => false
+  end
+
+  create_table "player_game_stats", :force => true do |t|
+    t.integer  "player_id"
+    t.integer  "game_id"
+    t.integer  "goals"
+    t.integer  "assists"
+    t.integer  "shots"
+    t.integer  "shots_on_goal"
+    t.integer  "ground_balls"
+    t.integer  "turnovers"
+    t.integer  "caused_turnovers"
+    t.integer  "faceoff_wins"
+    t.integer  "faceoffs_taken"
+    t.integer  "penalties"
+    t.integer  "penalty_seconds"
+    t.integer  "goalie_seconds"
+    t.integer  "goals_allowed"
+    t.integer  "saves"
+    t.integer  "wins"
+    t.integer  "losses"
+    t.integer  "ties"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  create_table "players", :force => true do |t|
+    t.integer  "team_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.string   "first_name"
+    t.string   "last_name"
   end
 
   create_table "stats", :force => true do |t|

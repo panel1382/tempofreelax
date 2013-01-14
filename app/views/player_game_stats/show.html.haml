@@ -1,0 +1,63 @@
+%p#notice= notice
+
+%p
+  %b Player:
+  = @player_game_stat.player_id
+%p
+  %b Game:
+  = @player_game_stat.game_id
+%p
+  %b Goals:
+  = @player_game_stat.goals
+%p
+  %b Assists:
+  = @player_game_stat.assists
+%p
+  %b Shots:
+  = @player_game_stat.shots
+%p
+  %b Shots on goal:
+  = @player_game_stat.shots_on_goal
+%p
+  %b Ground balls:
+  = @player_game_stat.ground_balls
+%p
+  %b Turnovers:
+  = @player_game_stat.turnovers
+%p
+  %b Caused turnovers:
+  = @player_game_stat.caused_turnovers
+%p
+  %b Faceoff wins:
+  = @player_game_stat.faceoff_wins
+%p
+  %b Faceoffs taken:
+  = @player_game_stat.faceoffs_taken
+%p
+  %b Penalties:
+  = @player_game_stat.penalties
+%p
+  %b Penalty seconds:
+  = @player_game_stat.penalty_seconds
+%p
+  %b Goalie seconds:
+  = @player_game_stat.goalie_seconds
+%p
+  %b Goals allowed:
+  = @player_game_stat.goals_allowed
+%p
+  %b Saves:
+  = @player_game_stat.saves
+%p
+  %b Wins:
+  = @player_game_stat.wins
+%p
+  %b Losses:
+  = @player_game_stat.losses
+%p
+  %b Ties:
+  = @player_game_stat.ties
+
+= link_to 'Edit', edit_player_game_stat_path(@player_game_stat)
+\|
+= link_to 'Back', player_game_stats_path

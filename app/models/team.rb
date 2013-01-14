@@ -23,6 +23,5 @@ class Team < ActiveRecord::Base
       #game.home?(id) ? s.push(home) : s.push(away)
       s.push game
     end
-    s
   end
 end

@@ -11,38 +11,8 @@ namespace :bg do
     dom = Nokogiri::HTML(open(scoreboard))
     
     dom.css('.light_grey_heading a').each do |el|
-      gameid = el['href'].split('/').last
-      
+      gameid = el['href'].split('/').last      
       game = Parser.new gameid
-=begin
-      game_byquarter =  Nokogiri::HTML(open(byquarter.gsub('@@gameid@@', gameid)))
-      game_boxscore = Nokogiri::HTML(open(boxscore.gsub('@@gameid@@', gameid))).css('.grey_heading:last-child')
-      
-      meta = game_byquarter.css('table:nth-child(5) td:nth-child(2)')
-      away = {
-        :quarter => game_byquarter.css(':nth-child(18) tr:nth-child(3) td'),
-        :box => game_boxscore[0] }
-      home = {
-        :quarter => game_byquarter.css(':nth-child(18) tr:nth-child(4) td'),
-        :box => game_boxscore[1] }
-      
-      arr = meta[0].text.split('/')
-      date = DateTime.parse(arr[2]+'-'+arr[0]+'-'+arr[1])
-      
-      game_data = {
-        :home_team => Team.there?(home[:quarter][0].text).id,
-        :away_team => Team.there?(away[:quarter][0].text).id,
-        :date => date,
-        :venue => meta[1].text,
-        :attendance => meta[2].text
-      }
-      
-      game_obj = Game.new(game_data)
-      game_obj.save
-      
-      
-      puts game_obj.id
-=end
     end
   end
   
@@ -140,6 +110,9 @@ namespace :bg do
     require 'nokogiri'
     require 'faraday'
     teams= []
+    games= []
+    years = (2010..2012).to_a
+    keys = {2010 => "10301",2011 => '10500',2012 => '10860'}
     
     conn = Faraday.new(:url => 'http://stats.ncaa.org/team/inst_team_list') do |faraday|
       faraday.request  :url_encoded             # form-encode POST params
@@ -147,26 +120,42 @@ namespace :bg do
       faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
     end
     
-    response = conn.post 'http://stats.ncaa.org/team/inst_team_list', :sport_code => 'MLA', :academic_year => '2011', :division => '1', :conf_id=> '-1'
-     
-    dom = Nokogiri::HTML(response.body)
-    links = dom.css('td a')
-    links.each do |link|
-      teams.push link['href'].split('org_id=').last
-    end
-    
-    games = []
-    teams.each_with_index do |teamid, i|
-      
-        url = "http://stats.ncaa.org/team/index/10301?org_id=#{teamid}"
-        response = conn.get url
+    years.each do |ac_year|
+      puts "Getting all teams from year: #{ac_year}"
+      doc = "lib/assets/games_#{ac_year}.csv"
+      begin
+        response = conn.post 'http://stats.ncaa.org/team/inst_team_list', :sport_code => 'MLA', :academic_year => ac_year, :division => '1', :conf_id=> '-1'
         dom = Nokogiri::HTML(response.body)
-        dom.css('.smtext:nth-child(3) a').each {|link| games.push link['href'].split('/').last.split('?').first}
+        links = dom.css('td a')
+        links.each do |link|
+          teams.push link['href'].split('org_id=').last
+        end
       
+        games = []
+        teams.each_with_index do |teamid, i|
+          begin
+            ctl = keys[ac_year]   
+            url = "http://stats.ncaa.org/team/index/#{ctl}?org_id=#{teamid}"
+            response = conn.get url
+            dom = Nokogiri::HTML(response.body)
+            dom.css('.smtext:nth-child(3) a').each {|link| games.push link['href'].split('/').last.split('?').first}
+          rescue
+            puts "Could not find team schedule for team: #{teamid} (#{url})"
+          end
+        end
+      rescue
+        puts "Could not resolve team list for year: #{ac_year}"
+      end
+      games.uniq!
+      puts games.inspect
+      begin
+        File.open(doc, "w", :type => 'text/csv; charset=utf-8'){ |f| f << games.join("\n")}
+        puts "Successfully wrote #{games.length} games to: #{doc}"
+      rescue
+        puts "Error writing to file."
+      end
     end
-    games.uniq!
-    puts games.inspect
-    games.each{ |game| temp = Parser.new; temp.parse(game); }
+    #games.each{ |game| temp = Parser.new; temp.parse(game); }
   end
   
   task :killAllGames => :environment do
@@ -189,57 +178,38 @@ namespace :bg do
     a.schedule(2012)
   end
   
-  task :addConf => :environment do
-    teams = Team.find((197..258).to_a)
-    puts teams.length
-    teams.each do |team|
-      team.destroy
-    end
-  end
-  
-  task :random => :environment do
-    #AnnualStat.sum_all(2010)
-    #ConferenceStat.sum_all(2011)
-    #s = AnnualStat.where(:year => '2011-01-01').all
-    #s.each {|as| as.rank_all if as.ranks.length == 0}
-    #ConferenceStat.rank_all(2012)
-    #ConferenceStat.sum_conference(10, 2012)
-    #ConferenceStat.where(:conference_id => 10).each{ |c| c.rank_all}
-    #teams = Team.where(:name => 'Air Force').all
-    #puts teams.each{ |t| t.conference.name }
-    
-    #game = Game.find_by_ncaa_id('1022271')
-    #puts game.id
-    
-    games = Game.select('home_team').uniq
-    arr = []
-    c = games.each do |a|
-      team = Team.find(a.home_team)
-      if team.name.is_a? String
-        if team.name.match(/ +$/)
-          arr.push team.name if !team.name.nil?
-        end
-      end
-    end
-    
-    puts arr.inspect
-=begin
-    arr.each do |team|
-      old = team.id
-      new_id = Team.where(:name => team.name.gsub(/ +$/,'')).first.id
+  desc "Processes LaxPower schedule stored locally"
+  task :parseSchedule => :environment do
+    require 'csv'
+    require 'date'
+    csv_txt = File.read('lib/assets/2013Schedule.html')
+    data = CSV.parse csv_txt, :headers=>true
+    teams = []
+    data.each do |row|
+      row = row.to_hash.with_indifferent_access
+      home = Team.there? row['Home Team']
+      away = Team.there? row['Away Team']
+      year = 2013
+      month = row['Date'][0].to_i
+      day = row['Date'][1..2].to_i
+      date = Date.new(year, month, day)      
+      row['Neutral'] == 'N' ? venue = "Neutral" : venue = home.home_field
       
-      games = Game.where(:home_team => old).all
-      games.each{ |g| g.home_team = new_id; g.save }
-      games = Game.where(:away_team => old).all
-      games.each{ |g| g.home_team = new_id; g.save } 
-    end
-=end
+      game = Game.new :home_team => home.id, :away_team => away.id, :year => year,
+                  :date => date, :venue => venue 
+      
+      game.save
+      puts game.id
+    end            
   end
   
-  task :fix => :environment do
-    NationalRank.where(:year => '2011-01-01').all.each{|c| c.delete}
-    AnnualStat.rank_all(2011)    
+  task :tester => :environment do
+    gameid = '120082'
+    g = Game.find_by_ncaa_id(gameid)
+    g.destroy if !g.nil?
+    
+    a = Parser.new
+    a.parse(gameid)
   end
-  
   
 end

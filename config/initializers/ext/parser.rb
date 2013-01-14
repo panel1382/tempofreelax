@@ -3,6 +3,26 @@
   require 'open-uri'
   require 'date'
   
+  @@player_web = {
+    :name => 0,
+    :goals => 2,
+    :assists => 3,
+    :shots => 5,
+    :shots_on_goal => 6,
+    :ground_balls => 7,
+    :turnovers => 8,
+    :caused_turnovers => 9,
+    :faceoff_wins => 10,
+    :faceoffs_taken => 11,
+    :penalties => 12,
+    :penalty_seconds => 13,
+    :goalie_seconds => 14,
+    :goals_allowed => 15,
+    :saves => 16,
+    :losses => 17,
+    :ties => 18
+  }
+  
   @@box_web = {
     'goals' => 0,
     'assists' => 1,
@@ -47,6 +67,16 @@
       box = @game.css('.grey_heading:last-child')
       self.boxToHash(boxToArray(box[0]),false)
       self.boxToHash(boxToArray(box[1]),true)
+    end
+  end
+  
+  def handlePlayers
+    if !@game.nil?
+      home = @game.css(':nth-child(9) tr.smtext')
+      away = @game.css(':nth-child(11) tr.smtext')
+      
+      playerBoxToRow(home, true)
+      playerBoxToRow(away, false)
     end
   end
   
@@ -96,6 +126,58 @@
       c+=1
     end
   end
+  
+  def playerBoxToRow(table, home)
+    players= []
+    table.css('tr').each do |row|
+      players.push playerRowToHash(row, home)
+    end
+  end
+  
+  def playerRowToHash(row, home)
+    # Takes a row of player game data. Checks to see if player exists and will create new
+    # then takes that data to create or update a player game stat row.
+    k = @@player_web
+    times = [:penalty_seconds, :goalie_seconds]
+    values = row.css('td')
+    player = {}
+    stats = {}
+    
+    # Populate player values
+    name = values[k[:name]].text.split(',')
+    if(name.length > 1)
+      player[:first_name] = name[1].strip
+      player[:last_name] = name[0].strip
+      home ? player[:team_id] = @home[:team_id] : player[:team_id] = @away[:team_id]
+      @players.push Player.there? player
+      
+      # Populate player stat values
+      stats[:player_id] = @players.last.id
+      stats[:game_id] = @game_id
+      k.each do |key, value|
+        if key != :name
+          # change minute:seconds to seconds
+          if times.include? key
+            puts values[value].text
+            
+            v = values[value].text.split(':')
+            time = (v[0].to_i * 60) + v[1].to_i
+            stats[key] = time
+            
+            puts time
+          else
+            stats[key] = values[value].text.to_i
+          end
+        end
+      end
+      
+      # Check if stat exists. If it does, update else creates a new and updates
+      pgs = PlayerGameStat.there? stats[:player_id], stats[:game_id]
+      pgs = PlayerGameStat.new if pgs.nil?
+      stats.each { |name, stat| pgs.send("#{name}=",stat) }
+      pgs.save
+    end
+  end
     
   def fixTime(string)
     arr = string.split('/')
@@ -124,7 +206,7 @@
         @away[k.to_sym] = nil
       end
     end
-    
+    @players = []
     @home[:home] = true
     @away[:home] = false
   end
@@ -135,11 +217,12 @@
       initHash
       
       boxscore = 'http://stats.ncaa.org/game/box_score/@@gameid@@'
-      byquarter = 'http://stats.ncaa.org/game/period_stats/@@gameid@@'
       playbyplay = 'http://stats.ncaa.org/game/play_by_play/@@gameid@@'
       
-      #game_byquarter =  Nokogiri::HTML(open(byquarter.gsub('@@gameid@@', gameID)))
-      begin
+      #byquarter is broken on the NCAA side
+      #byquarter = 'http://stats.ncaa.org/game/period_stats/@@gameid@@'
+      
+      #begin
         @game = Nokogiri::HTML(open(boxscore.gsub('@@gameid@@', gameID)))
         @pbp = Nokogiri::HTML(open(playbyplay.gsub('@@gameid@@', gameID)))
         handleBox
@@ -161,6 +244,7 @@
         
         game_obj = Game.new(game_data)
         game_obj.save
+        @game_id = game_obj.id
         
         @home[:team_id] = home.id
         @home[:game_id] = game_obj.id
@@ -171,9 +255,13 @@
         home_obj.save
         away_obj = GameStat.new(@away)
         away_obj.save
-      rescue
-        puts "Game: #{gameID} had an HTTP Error"
-      end
+        
+        handlePlayers
+        
+        game_obj
+      #rescue
+        #puts "Game: #{gameID} had an HTTP Error"
+      #end
     end
   end
 
