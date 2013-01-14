@@ -1,5 +1,5 @@
 class AddAttendanceToGames < ActiveRecord::Migration
   def change
-    add_column :Games, :attendance, :integer
+    add_column :games, :attendance, :integer
   end
 end
