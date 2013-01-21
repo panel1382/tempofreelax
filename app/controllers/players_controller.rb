@@ -2,7 +2,8 @@ class PlayersController < ApplicationController
   # GET /players
   # GET /players.json
   def index
-    @players = Player.all
+    params[:page] ? @page = params[:page] : @page = 1
+    @players = Player.order('`last_name` ASC').page(@page)
 
     respond_to do |format|
       format.html # index.html.erb

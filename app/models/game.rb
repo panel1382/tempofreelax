@@ -1,5 +1,6 @@
 class Game < ActiveRecord::Base
   has_many :game_stats
+  has_many :player_game_stats
   attr_accessible :away_team, :date, :home_team, :venue, :year, :attendance,:ncaa_id
   
   def home
@@ -20,6 +21,17 @@ class Game < ActiveRecord::Base
   
   def home?(team_id)
     home_team == team_id ? true : nil
+  end
+  
+  def teams
+    range = (Date.new(date.year,01,01)..Date.new(date.year,12,31))
+  
+    {
+      :home => Team.find(home_team),
+      :away => Team.find(away_team),
+      :home_as => AnnualStat.where(:team_id => home_team, :year => range).first,
+      :away_as => AnnualStat.where(:team_id => away_team, :year => range).first
+    }
   end
   
   def self.schedule(team_id, year)
@@ -82,4 +94,5 @@ class Game < ActiveRecord::Base
   def goals(us)
     send(us).goals
   end
+  
 end

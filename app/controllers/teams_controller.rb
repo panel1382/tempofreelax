@@ -15,13 +15,9 @@ class TeamsController < ApplicationController
   def show
     @team = Team.find(params[:id])
     @year = params[:year].to_i
+    @annual_stat = @team.annual_stat_by_year(@year)
+    @roster = @team.players_by_year @year
     @schedule = @team.schedule @year
-    
-    @team.annual_stats.each do |s|
-      @annual_stat = s if s.year.year == @year
-    end
-    
-    puts @annual_stat
     
     respond_to do |format|
       format.html # show.html.erb

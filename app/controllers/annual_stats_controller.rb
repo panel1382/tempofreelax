@@ -6,7 +6,7 @@ class AnnualStatsController < ApplicationController
     start = Date.new(@year,1,1)
     finish = Date.new(@year,12,31)
     @annual_stats = AnnualStat.where(:year => start..finish)
-    @annual_stats.each {|s| puts s.national_ranks.length }
+    @years = AnnualStat.available_years
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @annual_stats }

@@ -2,10 +2,10 @@
 
 %p
   %b Name:
-  = @player.name
+  = "#{@player.first_name} #{@player.last_name}"
 %p
   %b Team:
-  = @player.team_id
+  = @player.team.name
 
 = link_to 'Edit', edit_player_path(@player)
 \|

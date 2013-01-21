@@ -6,14 +6,14 @@ $(document).ready(function(){
     $(this).css("width", $(this).width());
   });
    
-   $(".persist-area").each(function() {
+   /*$(".persist-area").each(function() {
        clonedHeaderRow = $(".persist-header", this);
        clonedHeaderRow
          .before(clonedHeaderRow.clone())
          .css("width", clonedHeaderRow.width())
          .addClass("floatingHeader");
          
-   });
+   });*/
    
    
    sortTable()

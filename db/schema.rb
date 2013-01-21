@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130113212009) do
+ActiveRecord::Schema.define(:version => 20130121161719) do
 
   create_table "annual_stats", :force => true do |t|
     t.integer  "team_id"
@@ -55,6 +55,7 @@ ActiveRecord::Schema.define(:version => 20130113212009) do
     t.integer  "penalties"
     t.integer  "opp_penalties"
     t.integer  "faceoffs_taken"
+    t.float    "opp_pyth"
   end
 
   create_table "conference_stats", :force => true do |t|
@@ -157,20 +158,52 @@ ActiveRecord::Schema.define(:version => 20130113212009) do
     t.boolean  "conference",     :default => false
   end
 
+  create_table "player_annual_stats", :force => true do |t|
+    t.integer  "assists"
+    t.integer  "caused_turnovers"
+    t.integer  "faceoffs_won"
+    t.integer  "faceoffs_taken"
+    t.integer  "game_id"
+    t.integer  "goalie_seconds"
+    t.integer  "goals"
+    t.integer  "goals_allowed"
+    t.integer  "ground_balls"
+    t.integer  "losses"
+    t.integer  "penalties"
+    t.integer  "penalty_time"
+    t.integer  "player_id"
+    t.integer  "saves"
+    t.integer  "shot_attempts"
+    t.integer  "shots_on_goal"
+    t.integer  "ties"
+    t.integer  "turnovers"
+    t.integer  "wins"
+    t.integer  "extra_man_goals"
+    t.integer  "man_down_goals"
+    t.date     "year"
+    t.integer  "team_id"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+    t.string   "possessions"
+    t.string   "opp_possessions"
+    t.string   "position"
+    t.boolean  "faceoff_specialist"
+  end
+
   create_table "player_game_stats", :force => true do |t|
     t.integer  "player_id"
     t.integer  "game_id"
     t.integer  "goals"
     t.integer  "assists"
-    t.integer  "shots"
+    t.integer  "shot_attempts"
     t.integer  "shots_on_goal"
     t.integer  "ground_balls"
     t.integer  "turnovers"
     t.integer  "caused_turnovers"
-    t.integer  "faceoff_wins"
+    t.integer  "faceoffs_won"
     t.integer  "faceoffs_taken"
     t.integer  "penalties"
-    t.integer  "penalty_seconds"
+    t.integer  "penalty_time"
     t.integer  "goalie_seconds"
     t.integer  "goals_allowed"
     t.integer  "saves"
@@ -179,6 +212,8 @@ ActiveRecord::Schema.define(:version => 20130113212009) do
     t.integer  "ties"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
+    t.integer  "man_down_goals"
+    t.integer  "extra_man_goals"
   end
 
   create_table "players", :force => true do |t|

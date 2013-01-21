@@ -12,7 +12,11 @@ module TeamsHelper
     us == :home ? them = :away : them = :home
     us == :home ? prefix = 'vs. ' : prefix = 'at '
     
-    name = Team.find(game.send(them).team_id).name
-    prefix + name
+    Team.find(game.send(them).team_id)
   end
+  
+  def loc(game, us)
+    us == :home ? label = "Home" : label = "Away"
+  end
+  
 end

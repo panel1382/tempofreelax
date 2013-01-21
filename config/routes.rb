@@ -1,11 +1,13 @@
 Tempofreelax::Application.routes.draw do
+  resources :player_annual_stats
+
   resources :player_game_stats
 
   resources :players
 
   resources :conference_stats
 
-  #resources :stats
+  resources :stats
 
   resources :national_ranks
 
@@ -21,12 +23,16 @@ Tempofreelax::Application.routes.draw do
   
   match 'games/page/:page' => 'games#index'
   match 'teams/page/:page' => 'teams#index'
-  match 'teams/:year/:id' => 'teams#show'
-  match 'stats/:year' => 'annual_stats#index'
-  match 'stats/' => 'annual_stats#index'
+#  match 'teams/:year/:id' => 'teams#show'
+  match 'teams/:id/:year' => 'teams#show'
+  match 'overview/:year' => 'annual_stats#index'
+  match 'overview/' => 'annual_stats#index'
   match 'conf_stats/:conference_id/:year' => 'conference_stats#index'
   match 'games/:year/page/:page' => 'games#index'
   match 'games/:year' => 'games#index'
+  match 'stat/add' => 'stats#new'
+  match 'stat/all' => 'stats#index'
+  match 'player/:page/' => 'players#index'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

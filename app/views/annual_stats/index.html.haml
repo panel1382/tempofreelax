@@ -1,4 +1,11 @@
--title "Overview"
+-title "#{@year} Ratings"
+
+%ul.nav
+  - @years.each do |year|
+    -if @year == year.year.year
+      %li= "[#{year.year.year}]"
+    -else
+      %li= link_to year.year.year, "/overview/#{year.year.year}"
 
 %table.sortable.persist-area
   %thead.persist-header
@@ -8,6 +15,7 @@
       %th Pyth
       %th Off. Eff.
       %th Def. Eff.
+      %th S.O.S.
       %th Pace
       %th Pos. %
       %th Faceoff %
@@ -17,11 +25,12 @@
   %tbody  
     - @annual_stats.each do |a|
       %tr
-        %td= link_to a.team.name, "/teams/#{@year}/#{a.team.id}"
+        %td= link_to a.team.name, "/teams/#{a.team.id}/#{@year}"
         %td= "#{a.wins}-#{a.losses}"
         %td= stat_with_rank(:pyth, a, true)
         %td= stat_with_rank(:adjusted_offensive_efficiency, a)
         %td= stat_with_rank(:adjusted_defensive_efficiency, a)
+        %td= stat_with_rank(:opp_pyth, a, true)
         %td= stat_with_rank(:pace, a)
         %td= stat_with_rank(:pos_percentage, a, true)
         %td= stat_with_rank(:faceoff_percentage, a, true)

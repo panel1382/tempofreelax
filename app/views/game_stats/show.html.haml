@@ -2,7 +2,7 @@
 
 %p
   %b Team:
-  = @game_stat.team_id
+  = Team.find(@game_stat.team_id).name
 %p
   %b Home:
   = @game_stat.home
@@ -24,6 +24,9 @@
 %p
   %b Faceoffs won:
   = @game_stat.faceoffs_won
+%p
+  %b Faceoffs taken:
+  = @game_stat.faceoffs_taken
 %p
   %b Faceoff percentage:
   = @game_stat.faceoff_percentage

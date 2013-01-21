@@ -27,7 +27,7 @@
 
   - @player_game_stats.each do |player_game_stat|
     %tr
-      %td= player_game_stat.player_id
+      %td= link_to "#{player_game_stat.player.first_name} #{player_game_stat.player.last_name}", player_game_stat.player
       %td= player_game_stat.game_id
       %td= player_game_stat.goals
       %td= player_game_stat.assists

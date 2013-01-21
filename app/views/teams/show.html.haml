@@ -1,42 +1,214 @@
+-title "Team Details"
 %p#notice= notice
 
 %h1
-  = @team.name
-  \/
-  = @year
-%p
-  %b Conference:
-  = @team.conference.name if @team.conference
-%p
-  %b Home field:
-  = @team.home_field
+  = "#{@team.name} (#{@annual_stat.wins}-#{@annual_stat.losses})"
   
-%table
+%ul.nav
+  - @team.available_years.each do |year|
+    -if @year != year.year
+      %li
+        =link_to year.year, url_for(@team).split('/').push(year.year).join('/')
+    -else
+      %li.active
+        ="[#{year.year}]"
+  
+%table.overview.half
   %thead
-    %th Opponent
-    %th Date
-    %th Score
-    %th Possessions
-    %th Possession %
-    %th Offensive Eff.
-    %th Defensive Eff.
-    %th Off Clear %
-    %th Def Clear %
+    %tr
+      %th{:colspan=>3} Overview
+    %tr
+      %th Category
+      %th Offense
+      %th Defense
+  %tbody
+    %tr
+      %td Adj. Efficiency
+      %td= @annual_stat.adjusted_offensive_efficiency.round 2
+      %td= @annual_stat.adjusted_defensive_efficiency.round 2
+    %tr
+      %th{:colspan=>3} Possession and Pace
+    %tr
+      %td Pos/Game
+      %td{:colspan=>2}= (@annual_stat.ppg + @annual_stat.oppg).round 2
+    %tr
+      %td FO%
+      %td{:colspan=>2}= "#{@annual_stat.faceoff_percentage.round(2)}%"
+    %tr
+      %td Clearing
+      %td{:colspan=>2}= "#{@annual_stat.offensive_clear_rate.round(2)}%"
+    %tr
+      %td Pos/Game
+      %td= @annual_stat.ppg.round 4
+      %td= @annual_stat.oppg.round 4
+    %tr
+      %td Pos%
+      %td= "#{@annual_stat.pos_percentage.round(2)}%"
+      %td= "#{@annual_stat.opp_pos_percentage.round(2)}%"
+    %tr
+      %th{:colspan=>3} Shooting &amp; Scoring
+    %tr
+      %td Shots/Pos
+      %td= @annual_stat.shots_per_possession.round 4
+      %td= @annual_stat.opp_shots_per_possession.round 4
+    %tr
+      %td Shooting%
+      %td= "#{@annual_stat.shooting_percentage.round 2}%"
+      %td= "#{@annual_stat.opp_shooting_percentage.round 2}%"
+    %tr
+      %td eShooting%
+      %td= "#{@annual_stat.effective_shooting_percentage.round 2}%"
+      %td= "#{@annual_stat.opp_effective_shooting_percentage.round 2}%"
+    %tr
+      %td Assists/Pos
+      %td= @annual_stat.assists_per_possession.round 4
+      %td= @annual_stat.opp_assists_per_possession.round 4
+    %tr
+      %td TO/Pos
+      %td= @annual_stat.turnovers_per_possession.round 4
+      %td= @annual_stat.opp_turnovers_per_possession.round 4
+    %tr
+      %th{:colspan=>3} Extra Man Opportunities
+    %tr
+      %th
+      %th Man Up
+      %th Man Down
+    %tr
+      %td EMO/Pos
+      %td= @annual_stat.extra_man_per_possession.round 4
+      %td= @annual_stat.opp_extra_man_per_possession.round 4
+    %tr
+      %td EMO Conversion
+      %td= "#{@annual_stat.extra_man_conversion.round 2}%"
+      %td= "#{@annual_stat.man_down_defense.round 2}%"
+    %tr
+      %td EMO Reliance
+      %td= "#{@annual_stat.emo_reliance.round 2}%"
+      %td= "#{@annual_stat.opp_emo_reliance.round 2}%"
+    %tr
+      %th{:colspan=>3} Goalie Things
+    %tr
+      %td Save%
+      %td{:colspan=>2}= "#{@annual_stat.save_percentage.round 2}%"
+    %tr
+      %td Saves/Pos
+      %td{:colspan=>2}= @annual_stat.saves_per_possession.round 4
+      
+      
+
+%table.schedule.half
+  %thead
+    %tr
+      %th{:colspan=>4} Schedule
+    %tr
+      %th Date
+      %th Opponent
+      %th Location
+      %th Result
   %tbody
     - @schedule.each do |game|
       -us = define_which game, @team.id, :us
       -them = define_which game, @team.id, :them
+      -them_obj = opp(game, us)
       %tr
-        %td= opp(game, us)
         %td= game.date.strftime('%-m/%-d/%y').gsub('^0','')
-        %td= "#{game.goals(us)}-#{game.goals(them)}"
-        %td= game.possessions(us)+game.possessions(them)
-        %td= "#{game.pos_percentage(us)}%"
-        %td= game.offensive_efficiency(us)
-        %td= game.offensive_efficiency(them)
-        %td= "#{game.offensive_clear_rate(us)}%"
-        %td= "#{game.offensive_clear_rate(them)}%"
+        %td= link_to them_obj.name, url_for(them_obj).split('/').push(@year).join('/')
+        %td= loc(game, us)
+        %td 
+          =link_to "#{game.goals(us)}-#{game.goals(them)}", game
+          ="  (#{game.possessions(:game)})"
 
-= link_to 'Edit', edit_team_path(@team)
-\|
-= link_to 'Back', "/stats/#{@year}"
+
+%h3 Players
+
+%table.attack
+  %thead
+    %tr
+      %th{:colspan => 8} Attack
+    %tr
+      %th Name
+      %th Goals/Pos
+      %th Assits/Pos
+      %th Shots/Pos
+      %th Shot Acc.
+      %th TO/Pos
+      %th GB/Pos
+      %th CT/Pos
+  %tbody
+    - @roster[:attack].each do |player|
+      -if player.active?
+        %tr
+          %td= "#{player.player.first_name} #{player.player.last_name}"
+          %td= player.goals_per_possession.round 4
+          %td= player.assists_per_possession.round 4
+          %td= player.shots_per_possession.round 4
+          %td= "#{player.shooting_percentage.round(2)}%"
+          %td= player.turnovers_per_possession.round 4
+          %td= player.ground_balls_per_possession.round 4
+          %td= player.caused_turnovers_per_possession.round 4
+        
+%table.defense
+  %thead
+    %tr
+      %th{:colspan => 8} Defense
+    %tr
+      %th Name
+      %th Goals/Pos
+      %th Assits/Pos
+      %th Shots/Pos
+      %th Shot Acc.
+      %th TO/Pos
+      %th GB/Pos
+      %th CT/Pos
+  %tbody
+    - @roster[:defense].each do |player|
+      -if player.active?
+        %tr
+          %td= "#{player.player.first_name} #{player.player.last_name}"
+          %td= player.goals_per_possession.round 4
+          %td= player.assists_per_possession.round 4
+          %td= player.shots_per_possession.round 4
+          %td= "#{player.shooting_percentage.round(2)}%"
+          %td= player.turnovers_per_possession.round 4
+          %td= player.ground_balls_per_possession.round 4
+          %td= player.caused_turnovers_per_possession.round 4
+        
+%table.goalies
+  %thead
+    %tr
+      %th{:colspan => 5} Goalies
+    %tr
+      %th Name
+      %th Save%
+      %th GA
+      %th Minutes
+      %th GA/Pos
+  %tbody
+    - @roster[:goalies].each do |player|
+      %tr
+        %td= "#{player.player.first_name} #{player.player.last_name}"
+        %td= "#{player.save_percentage.round(2)}%"
+        %td= player.goals_allowed
+        %td= player.goalie_minutes
+        %td= player.goals_allowed_per_possesion.round 4
+
+%table.goalies
+  %thead
+    %tr
+      %th{:colspan => 5} Faceoff Specialists
+    %tr
+      %th Name
+      %th FO%
+      %th Wins
+      %th Losses
+      %th TO/FO
+  %tbody
+    - @roster[:fo].each do |player|
+      %tr
+        %td= "#{player.player.first_name} #{player.player.last_name}"
+        %td= "#{player.fo_percentage.round(2)}%"
+        %td= player.faceoffs_won
+        %td= player.faceoffs_lost
+        %td= player.turnovers_per_faceoff.round 4
+        
+= link_to 'Back', "/overview/#{@year}"

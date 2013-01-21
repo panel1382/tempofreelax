@@ -16,72 +16,7 @@ namespace :bg do
     end
   end
   
-  task :test => :environment do 
-    require 'nokogiri'
-    require 'open-uri'
-    game = Parser.new 
-    game.parse '1057351'
-    
-  end
-  
-  task :importAnnual => :environment do
-    require 'csv'
-    omit = [:created, :modified, :stat_id, :conference ]
-    float = [:def_adj, :off_adj]
-    file = open(Rails.root.join('lib','assets','2012stats.csv'))
-    data = file.entries
-    keys = data[0].gsub('"','').gsub("\n",'').split(',')
-    
-    data.each do |row|
-      arr = row.split(',')
-      c = 0
-      a = {}
-      arr.map do |stat| 
-        key = keys[c].to_sym
-        if !omit.include? key
-          if float.include?(key) 
-            a[key]= stat.to_f 
-          else
-            a[key] = stat.to_i
-          end
-        end
-        c+=1
-      end
-      as = AnnualStat.new(a)
-      as.save
-    end
-  end
-  
-  task :teams => :environment do
-    require 'csv'
-    file = open(Rails.root.join('lib','assets','teams.csv'))
-    data = file.entries
-    keys = [:id, :name, :conference_id]
-
-    data.each do |row|
-      arr = row.split(',')
-      c = 0
-      a = {}
-      arr.map do |stat|
-        key = keys[c]
-        
-       
-        if key == :conference_id
-          conf = Conference.find_or_create_by_name stat.gsub("\n",'')
-          stat = conf.id
-        end
-        if c > 0
-          c== 1 ? a[key] = stat : a[key] = stat.to_i 
-        end    
-        c+=1
-      end
-
-      team = Team.new(a)
-      team.save 
-      puts team.id 
-    end
-  end
-  
+  desc "Go through the AnnualStats in a year and ranking the teams"
   task :generateRanks => :environment do
     require 'date'
     year = 2012
@@ -90,20 +25,6 @@ namespace :bg do
     a = AnnualStat.where(:year=> start..finish)
     s = Stat.find(:all)
     a.each{|b| s.each{|t| b.rank(t.slug.to_sym) }}
-  end
-  
-  task :thang => :environment do
-    require 'date'
-    year = 2011
-    start = Date.new(year,1,1)
-    finish = Date.new(year,12,31)
-    a = Game.where(:date => start..finish).select('home_team').uniq
-    
-    a.each_with_index do |team, i|
-      stat = AnnualStat.where(:team_id => team.home_team)
-      stat = AnnualStat.new(:team_id => team.home_team, :year => start) if !stat.is_a?( AnnualStat )
-      stat.sum
-    end
   end
   
   task :allGames => :environment do
@@ -170,14 +91,6 @@ namespace :bg do
     stats.each {|stat| stat.destroy}
   end
   
-  task :schedule => :environment do
-    team_id = 259
-    year = 2012
-    
-    a = Team.find(259)
-    a.schedule(2012)
-  end
-  
   desc "Processes LaxPower schedule stored locally"
   task :parseSchedule => :environment do
     require 'csv'
@@ -203,13 +116,65 @@ namespace :bg do
     end            
   end
   
-  task :tester => :environment do
-    gameid = '120082'
-    g = Game.find_by_ncaa_id(gameid)
-    g.destroy if !g.nil?
-    
-    a = Parser.new
-    a.parse(gameid)
+  task :loadGames => :environment do
+    require 'csv'
+    require 'date'
+    errorLog = File.open('lib/assets/parseErrorLog','a+')
+    years = (2010..2012).to_a
+    parser = Parser.new
+    errorLog.write("=====#{DateTime.now.httpdate}=====\n")
+    years.each do |year|    
+      doc = "lib/assets/games_#{year.to_s}.csv"
+      begin
+        csv_txt = File.read(doc)
+        data = CSV.parse csv_txt, :headers => false
+      rescue
+        kill "Unable to open file: #{doc}"
+      end
+      
+      data.each do |row|
+        parser.parse(row[0].to_s)
+      end
+      
+      begin
+        AnnualStat.sum_all(year)
+        AnnualStat.rank_all(year)
+      rescue
+        puts "Unable to sum or ranks year: #{year.to_s}"
+      end
+    end
+    errorLog.write.write('\n\n=========END========\n\n\n\n') 
   end
   
+  task :sumAll => :environment do
+    AnnualStat.sum_all(2010)
+    AnnualStat.rank_all(2010)
+    AnnualStat.sum_all(2011)
+    AnnualStat.rank_all(2011)
+    AnnualStat.sum_all(2012)
+    AnnualStat.rank_all(2012)
+  end
+  
+  task :rank => :environment do 
+    AnnualStat.rank_all(2010)
+    AnnualStat.rank_all(2011)
+    AnnualStat.rank_all(2012)
+  end
+  
+  task :refresh => :environment do
+    AnnualStat.sum_all(2010)
+    AnnualStat.rank_all(2010)
+    PlayerAnnualStat.sumAll(2010)
+    AnnualStat.sum_all(2011)
+    AnnualStat.rank_all(2011)
+    PlayerAnnualStat.sumAll(2011)
+    AnnualStat.sum_all(2012)
+    AnnualStat.rank_all(2012)
+    PlayerAnnualStat.sumAll(2012)
+  end
+  
+  task :quick => :environment do
+    puts AnnualStat.available_years.inspect
+    
+  end
 end

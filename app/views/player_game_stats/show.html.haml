@@ -2,7 +2,7 @@
 
 %p
   %b Player:
-  = @player_game_stat.player_id
+  = "#{@player_game_stat.player.first_name} #{@player_game_stat.player.last_name}"
 %p
   %b Game:
   = @player_game_stat.game_id

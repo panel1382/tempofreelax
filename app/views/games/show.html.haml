@@ -1,13 +1,17 @@
 %p#notice= notice
+
+%h1
+  = "#{@game.teams[:away].name} at #{@game.teams[:home].name}"
+
 %p
   %b ID:
   = @game.id
 %p
   %b Home team:
-  = @game.home_team
+  = @game.teams[:home].name
 %p
   %b Away team:
-  = @game.away_team
+  = @game.teams[:away].name
 %p
   %b Year:
   = @game.date.year
@@ -17,6 +21,14 @@
 %p
   %b Date:
   = @game.date
+  
+%p
+  =@game.teams[:home_as].pyth
+
+%p= link_to 'Box Score', "http://stats.ncaa.org/game/box_score/#{@game.ncaa_id}"
+
+%p= link_to 'Home Stats', @game.home
+%p= link_to 'Away Stats', @game.away
 
 = link_to 'Edit', edit_game_path(@game)
 \|

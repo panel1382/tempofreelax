@@ -4,16 +4,15 @@ class AnnualStat < ActiveRecord::Base
   belongs_to :team
   has_many :national_ranks
   
-attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_adj, :extra_man_goals, :extra_man_opportunities, :faceoffs_won, :games, :goals, :man_down_goals, :off_adj, :opp_assists, :opp_clear_attempts, :opp_clear_success, :opp_extra_man_goals, :opp_extra_man_opportunities, :opp_faceoffs_won, :opp_goals, :opp_man_down_goals, :opp_shot_attempts, :opp_shots_on_goal, :rank_id, :shot_attempts, :shots_on_goal, :team_id, :wins, :year, :penalties, :opp_penalties, :ground_balls, :opp_ground_balls, :turnovers, :opp_turnovers, :caused_turnovers, :opp_caused_turnovers, :faceoffs_taken, :penalty_time, :opp_penalty_time
+attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_adj, :extra_man_goals, :extra_man_opportunities, :faceoffs_won, :games, :goals, :man_down_goals, :off_adj, :opp_assists, :opp_clear_attempts, :opp_clear_success, :opp_extra_man_goals, :opp_extra_man_opportunities, :opp_faceoffs_won, :opp_goals, :opp_man_down_goals, :opp_shot_attempts, :opp_shots_on_goal, :rank_id, :shot_attempts, :shots_on_goal, :team_id, :wins, :year, :penalties, :opp_penalties, :ground_balls, :opp_ground_balls, :turnovers, :opp_turnovers, :caused_turnovers, :opp_caused_turnovers, :faceoffs_taken, :penalty_time, :opp_penalty_time, :opp_pyth
  
   def self.sum_all(year)
     start = Date.new(year,1,1)
     finish = Date.new(year,12,31)
-    a = Game.where(:date => start..finish)
-    puts a.inspect
+    a = Game.where(:date => start..finish).select(:home_team).uniq
     
     a.each_with_index do |team, i|
-      stat = AnnualStat.where(:team_id => team.home_team, :year => stat).first
+      stat = AnnualStat.where(:team_id => team.home_team, :year => start).first
       stat = AnnualStat.new(:team_id => team.home_team, :year => start) if !stat.is_a?( AnnualStat )
       stat.sum
     end
@@ -30,6 +29,39 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
     end
   end
   
+  def self.find_or_create(team_id, year)
+    require 'date'
+    start = Date.new(year,1,1)
+    finish = Date.new(year,12,31)
+    as = AnnualStat.where(:team_id => team_id, :year => start..finish).first
+    if as.nil?
+      as = AnnualStat.new(:team_id => team_id, :year => Date(year, 2, 2))
+    end
+    as
+  end
+  
+  def self.national_avg(year)
+    require 'date'
+    #find all annual stats for the given year
+    start = Date.new(year,1,1)
+    finish = Date.new(year,12,31)
+    stats = AnnualStat.where(:year => start..finish).all
+    
+    #set up variables for averages
+    n = stats.length
+    avg = 0.0
+    
+    #sum it up and divide
+    stats.each { |stat| avg += stat.offensive_efficiency }
+    avg/n
+  end
+  
+  def self.available_years
+    require 'date'
+    range = Date.new(2000,01,01)..Date.today
+    years = AnnualStat.where(:year => range ).select('year').uniq
+  end
+  
   def ranks
     if @ranks.nil?
       @ranks = {}
@@ -43,7 +75,6 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
   end
   
   def rank(stat)
-    puts methods.include? stat
     if methods.include? stat
       
       s = Stat.find_or_create_by_slug(stat.to_s)
@@ -67,14 +98,14 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
       list.reverse! if s.order == 'descending'
       rank.rank = list.index( send(stat) ) + 1
       
-      rank.save
-      puts rank.id     
+      rank.save    
     end
   end
   
-  def sum
-    home_games = Game.where(:home_team => team_id)
-    away_games = Game.where(:away_team => team_id)
+  def sum 
+    require 'date'
+    home_games = Game.where(:home_team => team_id, :date => year..Date.new(year.year, 12, 31))
+    away_games = Game.where(:away_team => team_id, :date => year..Date.new(year.year, 12, 31))
     us = actual_hash
     them = opp_hash
     actual = []
@@ -95,17 +126,68 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
       us[:games]+=1
       temp = actual_hash
       keys_for_sum.each {|k| temp[k]= game.send k}
-      us.merge(temp){|key, old, new| us[key]= old+new}
+      us.merge(temp) do |key, old, new|
+        us[key]= old.to_i+new.to_i
+      end
     end
     
     opp.each do |game|
       temp = opp_hash
       keys_for_sum.each {|k| temp[('opp_'+k.to_s).to_sym] = game.send k}
-      them.merge(temp){|key, old, new| them[key]= old+new}
+      them.merge(temp) do |key, old, new|
+        them[key]= old.to_i+new.to_i
+      end
     end
     
     total = us.merge them
     update_attributes(total)
+    calculate_adjust
+  end
+  
+  def calculate_adjust
+    national = AnnualStat.national_avg(year.year)
+    opps = opponent_stats
+    n = opps.length
+    offense = 0.0
+    defense = 0.0
+    all_pyth = 0.0
+    puts "#{team.name}: #{n}"
+    opps.each do |opp|
+      if !opp.nil?
+        offense += opp.offensive_efficiency
+        defense += opp.defensive_efficiency
+        all_pyth += opp.pyth
+      else
+        puts opp.inspect
+        n -= 1
+      end
+    end
+    if n > 0
+      def_adj = (offense/n) / national
+      off_adj = (defense/n) / national
+      opp_pyth = all_pyth / n
+    else
+      def_adj = 1.0
+      off_adj = 1.0
+    end
+    
+    update_attributes :off_adj => off_adj, :def_adj => def_adj, :opp_pyth => opp_pyth
+  end
+  
+  def game_list
+    require 'date'
+    home_games = Game.where(:home_team => team_id, :date => year..Date.new(year.year, 12, 31))
+    away_games = Game.where(:away_team => team_id, :date => year..Date.new(year.year, 12, 31))
+    
+    games = {:home => home_games, :away => away_games}
+  end
+  
+  def opponent_stats
+    opp = []
+    g = game_list
+    g[:home].each {|game| opp.push AnnualStat.where(:team_id => game.away_team, :year => year).first} 
+    g[:away].each {|game| opp.push AnnualStat.where(:team_id => game.home_team, :year => year).first}
+    opp
   end
   
   #various stats
@@ -165,6 +247,14 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
     opp_shots_on_goal / opp_shot_attempts
   end
   
+  def shots_per_possession
+    shots_on_goal.to_f / possessions
+  end
+  
+  def opp_shots_per_possession
+    opp_shots_on_goal.to_f / opp_possessions
+  end
+  
   def offensive_clear_rate
     clear_success.to_f / clear_attempts * 100
   end
@@ -181,6 +271,14 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
     (opp_goals.to_f / opp_possessions) * 100
   end
   
+  def extra_man_per_possession
+    extra_man_opportunities.to_f / possessions
+  end
+  
+  def opp_extra_man_per_possession
+    opp_extra_man_opportunities.to_f / opp_possessions
+  end
+  
   def extra_man_conversion
     extra_man_goals.to_f / extra_man_opportunities * 100
   end
@@ -189,8 +287,20 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
     (1 - (opp_extra_man_goals.to_f / opp_extra_man_opportunities)) * 100
   end
   
+  def emo_reliance
+    (extra_man_goals.to_f / goals) * 100
+  end
+  
+  def opp_emo_reliance
+    (opp_extra_man_goals.to_f / opp_goals) * 100
+  end
+  
   def save_percentage
     (1 - (opp_goals.to_f / opp_shots_on_goal)) * 100 
+  end
+  
+  def saves_per_possession
+    saves.to_f / opp_possessions
   end
   
   def saves
@@ -215,6 +325,22 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
   
   def opp_assists_per_goal
     opp_assists.to_f / opp_goals
+  end
+  
+  def assists_per_possession
+    assists.to_f / goals
+  end
+  
+  def opp_assists_per_possession
+    opp_assists.to_f / opp_goals
+  end
+  
+  def turnovers_per_possession
+    turnovers.to_f / possessions
+  end
+  
+  def opp_turnovers_per_possession
+    opp_turnovers.to_f / opp_possessions
   end
   
   #possessions per game

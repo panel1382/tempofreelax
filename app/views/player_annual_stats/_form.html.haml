@@ -1,0 +1,79 @@
+= form_for @player_annual_stat do |f|
+  - if @player_annual_stat.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@player_annual_stat.errors.count, "error")} prohibited this player_annual_stat from being saved:"
+      %ul
+        - @player_annual_stat.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field
+    = f.label :assists
+    = f.number_field :assists
+  .field
+    = f.label :caused_turnovers
+    = f.number_field :caused_turnovers
+  .field
+    = f.label :faceoff_wins
+    = f.number_field :faceoff_wins
+  .field
+    = f.label :faceoffs_taken
+    = f.number_field :faceoffs_taken
+  .field
+    = f.label :game_id
+    = f.number_field :game_id
+  .field
+    = f.label :goalie_seconds
+    = f.number_field :goalie_seconds
+  .field
+    = f.label :goals
+    = f.number_field :goals
+  .field
+    = f.label :goals_allowed
+    = f.number_field :goals_allowed
+  .field
+    = f.label :ground_balls
+    = f.number_field :ground_balls
+  .field
+    = f.label :losses
+    = f.number_field :losses
+  .field
+    = f.label :penalties
+    = f.number_field :penalties
+  .field
+    = f.label :penalty_time
+    = f.number_field :penalty_time
+  .field
+    = f.label :player_id
+    = f.number_field :player_id
+  .field
+    = f.label :saves
+    = f.number_field :saves
+  .field
+    = f.label :shot_attempts
+    = f.number_field :shot_attempts
+  .field
+    = f.label :shots_on_goal
+    = f.number_field :shots_on_goal
+  .field
+    = f.label :ties
+    = f.number_field :ties
+  .field
+    = f.label :turnovers
+    = f.number_field :turnovers
+  .field
+    = f.label :wins
+    = f.number_field :wins
+  .field
+    = f.label :extra_man_goals
+    = f.number_field :extra_man_goals
+  .field
+    = f.label :man_down_goals
+    = f.number_field :man_down_goals
+  .field
+    = f.label :year
+    = f.date_select :year
+  .field
+    = f.label :team_id
+    = f.number_field :team_id
+  .actions
+    = f.submit 'Save'

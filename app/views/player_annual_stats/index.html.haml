@@ -1,0 +1,63 @@
+%h1 Listing player_annual_stats
+
+%table
+  %tr
+    %th Assists
+    %th Caused turnovers
+    %th Faceoff wins
+    %th Faceoffs taken
+    %th Game
+    %th Goalie seconds
+    %th Goals
+    %th Goals allowed
+    %th Ground balls
+    %th Losses
+    %th Penalties
+    %th Penalty time
+    %th Player
+    %th Saves
+    %th Shot attempts
+    %th Shots on goal
+    %th Ties
+    %th Turnovers
+    %th Wins
+    %th Extra man goals
+    %th Man down goals
+    %th Year
+    %th Team
+    %th
+    %th
+    %th
+
+  - @player_annual_stats.each do |player_annual_stat|
+    %tr
+      %td= player_annual_stat.assists
+      %td= player_annual_stat.caused_turnovers
+      %td= player_annual_stat.faceoffs_won
+      %td= player_annual_stat.faceoffs_taken
+      %td= player_annual_stat.game_id
+      %td= player_annual_stat.goalie_seconds
+      %td= player_annual_stat.goals
+      %td= player_annual_stat.goals_allowed
+      %td= player_annual_stat.ground_balls
+      %td= player_annual_stat.losses
+      %td= player_annual_stat.penalties
+      %td= player_annual_stat.penalty_time
+      %td= player_annual_stat.player_id
+      %td= player_annual_stat.saves
+      %td= player_annual_stat.shot_attempts
+      %td= player_annual_stat.shots_on_goal
+      %td= player_annual_stat.ties
+      %td= player_annual_stat.turnovers
+      %td= player_annual_stat.wins
+      %td= player_annual_stat.extra_man_goals
+      %td= player_annual_stat.man_down_goals
+      %td= player_annual_stat.year
+      %td= player_annual_stat.team_id
+      %td= link_to 'Show', player_annual_stat
+      %td= link_to 'Edit', edit_player_annual_stat_path(player_annual_stat)
+      %td= link_to 'Destroy', player_annual_stat, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Player annual stat', new_player_annual_stat_path

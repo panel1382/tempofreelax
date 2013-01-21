@@ -1,0 +1,51 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  assists: 1
+  caused_turnovers: 1
+  faceoff_wins: 1
+  faceoffs_taken: 1
+  game_id: 1
+  goalie_seconds: 1
+  goals: 1
+  goals_allowed: 1
+  ground_balls: 1
+  losses: 1
+  penalties: 1
+  penalty_time: 1
+  player_id: 1
+  saves: 1
+  shot_attempts: 1
+  shots_on_goal: 1
+  ties: 1
+  turnovers: 1
+  wins: 1
+  extra_man_goals: 1
+  man_down_goals: 1
+  year: 2013-01-19
+  team_id: 1
+
+two:
+  assists: 1
+  caused_turnovers: 1
+  faceoff_wins: 1
+  faceoffs_taken: 1
+  game_id: 1
+  goalie_seconds: 1
+  goals: 1
+  goals_allowed: 1
+  ground_balls: 1
+  losses: 1
+  penalties: 1
+  penalty_time: 1
+  player_id: 1
+  saves: 1
+  shot_attempts: 1
+  shots_on_goal: 1
+  ties: 1
+  turnovers: 1
+  wins: 1
+  extra_man_goals: 1
+  man_down_goals: 1
+  year: 2013-01-19
+  team_id: 1

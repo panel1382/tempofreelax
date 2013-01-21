@@ -1,0 +1,77 @@
+%p#notice= notice
+%p
+  %b Position:
+  = @player_annual_stat.position
+%p
+  %b Assists:
+  = @player_annual_stat.assists
+%p
+  %b Caused turnovers:
+  = @player_annual_stat.caused_turnovers
+%p
+  %b Faceoff wins:
+  = @player_annual_stat.faceoffs_won
+%p
+  %b Faceoffs taken:
+  = @player_annual_stat.faceoffs_taken
+%p
+  %b Game:
+  = @player_annual_stat.game_id
+%p
+  %b Goalie seconds:
+  = @player_annual_stat.goalie_seconds
+%p
+  %b Goals:
+  = @player_annual_stat.goals
+%p
+  %b Goals allowed:
+  = @player_annual_stat.goals_allowed
+%p
+  %b Ground balls:
+  = @player_annual_stat.ground_balls
+%p
+  %b Losses:
+  = @player_annual_stat.losses
+%p
+  %b Penalties:
+  = @player_annual_stat.penalties
+%p
+  %b Penalty time:
+  = @player_annual_stat.penalty_time
+%p
+  %b Player:
+  = @player_annual_stat.player_id
+%p
+  %b Saves:
+  = @player_annual_stat.saves
+%p
+  %b Shot attempts:
+  = @player_annual_stat.shot_attempts
+%p
+  %b Shots on goal:
+  = @player_annual_stat.shots_on_goal
+%p
+  %b Ties:
+  = @player_annual_stat.ties
+%p
+  %b Turnovers:
+  = @player_annual_stat.turnovers
+%p
+  %b Wins:
+  = @player_annual_stat.wins
+%p
+  %b Extra man goals:
+  = @player_annual_stat.extra_man_goals
+%p
+  %b Man down goals:
+  = @player_annual_stat.man_down_goals
+%p
+  %b Year:
+  = @player_annual_stat.year
+%p
+  %b Team:
+  = @player_annual_stat.team_id
+
+= link_to 'Edit', edit_player_annual_stat_path(@player_annual_stat)
+\|
+= link_to 'Back', player_annual_stats_path
