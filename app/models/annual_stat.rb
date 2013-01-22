@@ -35,8 +35,16 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
     finish = Date.new(year,12,31)
     as = AnnualStat.where(:team_id => team_id, :year => start..finish).first
     if as.nil?
-      as = AnnualStat.new(:team_id => team_id, :year => Date(year, 2, 2))
+      hash = AnnualStat.initHash
+      hash[:off_adj] = 1.0
+      hash[:def_adj] = 1.0
+      hash[:team_id] = team_id
+      hash[:year] = Date.new(year,1,1)
+      hash[:opp_pyth] = 50
+      as = AnnualStat.new(hash)
+      as.save
     end
+    puts as.id
     as
   end
   
@@ -407,6 +415,47 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
     :opp_penalty_time => 0,
     :opp_man_down_goals => 0,
     :opp_penalties => 0
+    }
+  end
+  
+  def self.initHash
+    {
+    :games => 0,
+    :wins => 0,
+    :goals => 0,
+    :shot_attempts => 0,
+    :shots_on_goal => 0,
+    :assists => 0,
+    :faceoffs_won => 0,
+    :faceoffs_taken => 0,
+    :clear_attempts => 0,
+    :clear_success => 0,
+    :extra_man_opportunities => 0,
+    :extra_man_goals => 0 ,
+    :ground_balls => 0,
+    :turnovers => 0,
+    :caused_turnovers => 0,
+    :penalty_time => 0,
+    :man_down_goals => 0,
+    :penalties => 0,
+    :opp_goals => 0,
+    :opp_shot_attempts => 0,
+    :opp_shots_on_goal => 0,
+    :opp_assists => 0,
+    :opp_faceoffs_won => 0,
+    :opp_clear_attempts => 0,
+    :opp_clear_success => 0,
+    :opp_extra_man_opportunities => 0,
+    :opp_extra_man_goals => 0,
+    :opp_ground_balls => 0,
+    :opp_turnovers => 0,
+    :opp_caused_turnovers => 0,
+    :opp_penalty_time => 0,
+    :opp_man_down_goals => 0,
+    :opp_penalties => 0,
+    :off_adj => 1.0,
+    :def_adj => 1.0,
+    :opp_pyth => 50.0
     }
   end
   

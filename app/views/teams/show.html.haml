@@ -18,9 +18,9 @@
     %tr
       %th{:colspan=>3} Overview
     %tr
-      %th Category
-      %th Offense
-      %th Defense
+      %th.left Category
+      %th.right Offense
+      %th.right Defense
   %tbody
     %tr
       %td Adj. Efficiency
@@ -71,8 +71,8 @@
       %th{:colspan=>3} Extra Man Opportunities
     %tr
       %th
-      %th Man Up
-      %th Man Down
+      %th.right Man Up
+      %th.right Man Down
     %tr
       %td EMO/Pos
       %td= @annual_stat.extra_man_per_possession.round 4
@@ -114,9 +114,11 @@
         %td= game.date.strftime('%-m/%-d/%y').gsub('^0','')
         %td= link_to them_obj.name, url_for(them_obj).split('/').push(@year).join('/')
         %td= loc(game, us)
-        %td 
-          =link_to "#{game.goals(us)}-#{game.goals(them)}", game
-          ="  (#{game.possessions(:game)})"
+        %td= score_or_prediction(game, us)
+    %tr
+      %th{:colspan=>4} Schedule Strength
+    %tr
+      %td{:colspan=>4}= stat_with_rank(:opp_pyth, @annual_stat, true)
 
 
 %h3 Players

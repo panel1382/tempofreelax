@@ -5,21 +5,25 @@
       %ul
         - @game.errors.full_messages.each do |msg|
           %li= msg
-
+  
+  %h3 Game Info
   .field
     = f.label :home_team
-    = f.number_field :home_team
+    = f.select :home_team, Team.where('1').order('name').collect {|t| [t.name,t.id]}
   .field
     = f.label :away_team
-    = f.number_field :away_team
-  .field
-    = f.label :year
-    = f.date_select :year
+    = f.select :away_team, Team.where('1').order('name').collect {|t| [t.name,t.id]}
   .field
     = f.label :venue
-    = f.text_field :venue
+    = f.text_field :venue, {:placeholder => "blank for home field"}
   .field
     = f.label :date
     = f.date_select :date
+    
+    
+  =render "game_stats/form"
   .actions
     = f.submit 'Save'
+    
+  
+  

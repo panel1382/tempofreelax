@@ -174,7 +174,10 @@ namespace :bg do
   end
   
   task :quick => :environment do
-    puts AnnualStat.available_years.inspect
-    
+    require 'date'
+    #range = Date.new(2013,1,1)..Date.new(2013,12,31)
+    #as = Game.where(:year => range).all
+    #as.each { |a| a.destroy }
+    AnnualStat.find_or_create(6, 2013)
   end
 end

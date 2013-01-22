@@ -21,14 +21,11 @@
 %p
   %b Date:
   = @game.date
-  
-%p
-  =@game.teams[:home_as].pyth
 
 %p= link_to 'Box Score', "http://stats.ncaa.org/game/box_score/#{@game.ncaa_id}"
 
-%p= link_to 'Home Stats', @game.home
-%p= link_to 'Away Stats', @game.away
+//%p= link_to 'Home Stats', @game.home
+//%p= link_to 'Away Stats', @game.away
 
 = link_to 'Edit', edit_game_path(@game)
 \|

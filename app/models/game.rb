@@ -3,6 +3,7 @@ class Game < ActiveRecord::Base
   has_many :player_game_stats
   attr_accessible :away_team, :date, :home_team, :venue, :year, :attendance,:ncaa_id
   
+  accepts_nested_attributes_for :game_stats
   def home
     if game_stats[0].home
       game_stats[0]
@@ -32,6 +33,21 @@ class Game < ActiveRecord::Base
       :home_as => AnnualStat.where(:team_id => home_team, :year => range).first,
       :away_as => AnnualStat.where(:team_id => away_team, :year => range).first
     }
+  end
+  
+  def prediction(us)
+    t = self.teams
+    #(AWin% - (BWin% * AWin%)) / (AWin% + BWin% - (2 * AWin% * BWin%))
+    if us == :home
+      a_pyth = t[:home_as].pyth
+      b_pyth = t[:away_as].pyth
+    else
+      a_pyth = t[:away_as].pyth
+      b_pyth = t[:home_as].pyth
+    end
+    
+    (a_pyth - (b_pyth * a_pyth)) / (a_pyth + b_pyth - (2 * a_pyth * b_pyth))
+    
   end
   
   def self.schedule(team_id, year)
