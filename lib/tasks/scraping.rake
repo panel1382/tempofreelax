@@ -1,19 +1,31 @@
 namespace :bg do
 
   desc "Scrape NCAA stats site for boxscores"
-  task :getStats => :environment do 
+  task :getGames => :environment do 
     require 'nokogiri'
     require 'open-uri'
     require 'date'
     
-    scoreboard = 'http://stats.ncaa.org/team/schedule_list?&sport_code=MLA'
+    doc = 'lib/assets/games_2013.csv'
     
-    dom = Nokogiri::HTML(open(scoreboard))
+    # set up to check for entire 2013 season
+    start_date = Date.new 2013, 2, 2
+    target_date = Date.new(Time.now.year, Time.now.month, Time.now.day).prev_day
+    range = start_date..target_date
+    games = []
+    range.each do |date|
+      schedule_date = "#{date.month}/#{date.day}/#{date.year}"
+      scoreboard = "http://stats.ncaa.org/team/schedule_list?&sport_code=MLA&schedule_date=#{schedule_date}"
+      puts scoreboard
+      dom = Nokogiri::HTML(open(scoreboard))
     
-    dom.css('.light_grey_heading a').each do |el|
-      gameid = el['href'].split('/').last      
-      game = Parser.new gameid
+      dom.css('.light_grey_heading a').each do |el|
+        gameid = el['href'].split('/').last      
+        games.push gameid
+      end
     end
+    
+    File.open(doc, "w", :type => 'text/csv; charset=utf-8'){ |f| f << games.join("\n")}
   end
   
   desc "Go through the AnnualStats in a year and ranking the teams"
@@ -120,9 +132,9 @@ namespace :bg do
     require 'csv'
     require 'date'
     errorLog = File.open('lib/assets/parseErrorLog','a+')
-    years = (2010..2012).to_a
+    years = (2010..2013).to_a
     parser = Parser.new
-    errorLog.write("=====#{DateTime.now.httpdate}=====\n")
+    errorLog.write("\n\n=====#{DateTime.now.httpdate}=====\n")
     years.each do |year|    
       doc = "lib/assets/games_#{year.to_s}.csv"
       begin
@@ -143,7 +155,7 @@ namespace :bg do
         puts "Unable to sum or ranks year: #{year.to_s}"
       end
     end
-    errorLog.write.write('\n\n=========END========\n\n\n\n') 
+    errorLog.write('\n\n=========END========\n\n\n\n') 
   end
   
   task :sumAll => :environment do
@@ -153,6 +165,8 @@ namespace :bg do
     AnnualStat.rank_all(2011)
     AnnualStat.sum_all(2012)
     AnnualStat.rank_all(2012)
+    AnnualStat.sum_all(2013)
+    AnnualStat.rank_all(2013)
   end
   
   task :rank => :environment do 
