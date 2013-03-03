@@ -106,7 +106,8 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
       if list.length > 0
         list.sort!
         list.reverse! if s.order == 'descending'
-        rank.rank = list.index( send(stat) ) + 1
+        i = list.index( send(stat) )
+        rank.rank = i + 1 if !i.nil?
       end
       
       rank.save    
