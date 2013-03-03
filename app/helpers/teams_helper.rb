@@ -20,12 +20,13 @@ module TeamsHelper
   end
   
   def score_or_prediction(game, us)
-    us == :home ? them = :away_team : them = :home_team
+    us == :home ? them = :away : them = :home
     output = ''
     if game.game_stats.length == 0
       output = "#{game.prediction(us).round(2).to_s}%"
     else
       if game.is_a? Game
+        puts game.goals(them)
         output = link_to("#{game.goals(us)}-#{game.goals(them)}", game)
         output.concat("  (#{game.possessions(:game)})")
       end
