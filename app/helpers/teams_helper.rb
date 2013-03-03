@@ -20,6 +20,7 @@ module TeamsHelper
   end
   
   def score_or_prediction(game, us)
+    us == :home ? them = :away_team : them = :home_team
     output = ''
     if game.game_stats.length == 0
       output = "#{game.prediction(us).round(2).to_s}%"
