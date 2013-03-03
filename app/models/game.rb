@@ -53,7 +53,7 @@ class Game < ActiveRecord::Base
   def self.schedule(team_id, year)
     start = Date.new(year,1,1)
     finish = Date.new(year,12,31)
-    a = Game.where(:home_team => team_id).or.where(:away_team => team_id).where(:date => start..finish).order('`date` ASC')
+    a = Game.where(:home_team => team_id).or.where(:away_team => team_id).where(:date => start..finish).order('"date" ASC')
     return a
   end
   
