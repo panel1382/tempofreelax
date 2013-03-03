@@ -99,12 +99,15 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
       all = AnnualStat.find_all_by_year year
       list = []
       all.each do |row|
-        list.push  row.send stat
+        n = row.send stat
+        list.push(n) if !n.nil? 
       end
       
-      list.sort!
-      list.reverse! if s.order == 'descending'
-      rank.rank = list.index( send(stat) ) + 1
+      if list.length > 0
+        list.sort!
+        list.reverse! if s.order == 'descending'
+        rank.rank = list.index( send(stat) ) + 1
+      end
       
       rank.save    
     end
