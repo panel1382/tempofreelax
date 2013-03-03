@@ -25,8 +25,10 @@ module TeamsHelper
     if game.game_stats.length == 0
       output = "#{game.prediction(us).round(2).to_s}%"
     else
-      output = link_to("#{game.goals(us)}-#{game.goals(them)}", game)
-      output.concat("  (#{game.possessions(:game)})")
+      if game.is_a? Game
+        output = link_to("#{game.goals(us)}-#{game.goals(them)}", game)
+        output.concat("  (#{game.possessions(:game)})")
+      end
     end
   end
   
