@@ -12,7 +12,7 @@ class PlayerAnnualStat < ActiveRecord::Base
   def self.sumAll(year)
     range = Date.new(year,1,1)..Date.new(year,12,31)
     
-    pgs = PlayerGameStat.joins(:player, :game).where('games.date' => range).select(:player_id).order('players.team_id').uniq
+    pgs = PlayerGameStat.joins(:player, :game).where('games.date' => range).select(:player_id).uniq
     pgs.each do |t|
       stat = PlayerAnnualStat.find_or_create_by_player_id_and_year(:player_id => t.player_id, :year => Date.new(year,1,1))
       stat.sum
