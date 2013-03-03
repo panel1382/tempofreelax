@@ -173,6 +173,7 @@ namespace :bg do
     AnnualStat.rank_all(2010)
     AnnualStat.rank_all(2011)
     AnnualStat.rank_all(2012)
+    AnnualStat.rank_all(2013)
   end
   
   task :refresh => :environment do
