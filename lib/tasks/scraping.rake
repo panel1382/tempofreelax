@@ -185,6 +185,8 @@ namespace :bg do
     AnnualStat.sum_all(2012)
     AnnualStat.rank_all(2012)
     PlayerAnnualStat.sumAll(2012)
+    AnnualStat.rank_all(2013)
+    PlayerAnnualStat.sumAll(2013)
   end
   
   task :quick => :environment do
