@@ -193,9 +193,10 @@ namespace :bg do
   
   task :quick => :environment do
     require 'date'
-    #range = Date.new(2013,1,1)..Date.new(2013,12,31)
-    #as = Game.where(:year => range).all
-    #as.each { |a| a.destroy }
-    AnnualStat.find_or_create(6, 2013)
+    teams = [10,14,15,26,27,31,35,45,46,53,58,60,66]
+    teams.each{|t_id| AnnualStat.find_or_create(6, 2013) }
+    AnnualStat.sum_all(2013)
+    AnnualStat.rank_all(2013)
+    PlayerAnnualStat.sumAll(2013)
   end
 end
