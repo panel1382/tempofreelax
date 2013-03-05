@@ -272,7 +272,7 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
   end
   
   def defensive_clear_rate
-    (opp_clear_success.to_f / opp_clear_attempts) * 100
+    (1-(opp_clear_success.to_f / opp_clear_attempts)) * 100
   end
   
   def offensive_efficiency

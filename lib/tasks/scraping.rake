@@ -132,7 +132,7 @@ namespace :bg do
     require 'csv'
     require 'date'
     errorLog = File.open('lib/assets/parseErrorLog','a+')
-    years = (2010..2013).to_a
+    years = [2013] #(2010..2013).to_a
     parser = Parser.new
     errorLog.write("\n\n=====#{DateTime.now.httpdate}=====\n")
     years.each do |year|    
@@ -159,14 +159,15 @@ namespace :bg do
   end
   
   task :sumAll => :environment do
-    AnnualStat.sum_all(2010)
-    AnnualStat.rank_all(2010)
-    AnnualStat.sum_all(2011)
-    AnnualStat.rank_all(2011)
-    AnnualStat.sum_all(2012)
-    AnnualStat.rank_all(2012)
+    #AnnualStat.sum_all(2010)
+    #AnnualStat.rank_all(2010)
+    #AnnualStat.sum_all(2011)
+    #AnnualStat.rank_all(2011)
+    #AnnualStat.sum_all(2012)
+    #AnnualStat.rank_all(2012)
     AnnualStat.sum_all(2013)
     AnnualStat.rank_all(2013)
+    PlayerAnnualStat.sumAll(2013)
   end
   
   task :rank => :environment do 

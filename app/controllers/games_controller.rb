@@ -16,7 +16,8 @@ class GamesController < ApplicationController
   # GET /games/1.json
   def show
     @game = Game.find(params[:id])
-
+    @home = AnnualStat.where(:year => Date.new(@game.date.year), :team_id => @game.teams[:home].id).first
+    @away = AnnualStat.where(:year => Date.new(@game.date.year), :team_id => @game.teams[:away].id).first
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @game }

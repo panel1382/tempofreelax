@@ -79,12 +79,12 @@ class Game < ActiveRecord::Base
   
   def faceoff_percentage(us)
     us == :home ? them = :away : them = :home
-    (faceoffs_won.to_f / faceoffs_taken * 100).round(2)
+    (send(us).faceoffs_won.to_f / send(us).faceoffs_taken * 100).round(2)
   end
   
   def shooting_percentage(us)
     us == :home ? them = :away : them = :home
-    (goals.to_f / shot_attempts  * 100).round(2)
+    (send(us).goals.to_f / send(us).shot_attempts  * 100).round(2)
   end
   
   def effective_shooting_percentage(us)

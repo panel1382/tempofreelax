@@ -2,6 +2,67 @@
 
 %h1
   = "#{@game.teams[:away].name} at #{@game.teams[:home].name}"
+%h3
+  = @game.date.strftime "%a. %b. %-d, %Y"
+
+%table.center
+  %tr
+    %th
+    %th{:colspan => 2} Home
+    %th{:colspan => 2} Away
+  %tr
+    %th
+    %th{:colspan => 2}= @game.teams[:home].name
+    %th{:colspan => 2}= @game.teams[:away].name
+  %tr
+    %td 
+    %td Season Avg.
+    %td{:colspan=>2} Game
+    %td Season Avg.
+  %tr
+    %td Goals
+    %td= @home.goals
+    %td= @game.home.goals
+    %td= @game.away.goals
+    %td= @away.goals
+  %tr
+    %td  Pace
+    %td= @home.pace
+    %td= @game.possessions(:home)
+    %td= @game.possessions(:away)
+    %td= @away.pace
+  %tr
+    %td  Off Eff.
+    %td= @home.offensive_efficiency
+    %td= @game.offensive_efficiency :home
+    %td= @game.offensive_efficiency :away
+    %td= @away.offensive_efficiency
+  %tr
+    %td  Def Eff.
+    %td= @home.defensive_efficiency
+    %td= @game.offensive_efficiency :away
+    %td= @game.offensive_efficiency :home
+    %td= @away.defensive_efficiency
+  %tr
+    %th{:colspan => 5} Possessions and Pace
+  %tr
+    %td Faceoff %
+    %td= @home.faceoff_percentage
+    %td= @game.faceoff_percentage :home
+    %td= @game.faceoff_percentage :away
+    %td= @away.faceoff_percentage
+  %tr
+    %td Clearing %
+    %td= @home.offensive_clear_rate
+    %td= @game.offensive_clear_rate :home
+    %td= @game.offensive_clear_rate :away
+    %td= @away.offensive_clear_rate
+  %tr
+    %td Riding %
+    %td= @home.defensive_clear_rate
+    %td= 100 - @game.offensive_clear_rate( :away )
+    %td= 100 - @game.offensive_clear_rate( :home )
+    %td= @away.defensive_clear_rate
 
 %p
   %b ID:
