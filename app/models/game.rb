@@ -82,8 +82,11 @@ class Game < ActiveRecord::Base
     (send(us).faceoffs_won.to_f / send(us).faceoffs_taken * 100).round(2)
   end
   
+  def shots_per_possession(us)
+    send(us).shot_attempts.to_f / possessions(us)
+  end
+  
   def shooting_percentage(us)
-    us == :home ? them = :away : them = :home
     (send(us).goals.to_f / send(us).shot_attempts  * 100).round(2)
   end
   
@@ -100,11 +103,51 @@ class Game < ActiveRecord::Base
   end
   
   def extra_man_conversion(us)
-    (send(us).extra_man_goals.to_f / send(us).extra_man_opportunities * 100).round(2)
+    if send(us).extra_man_opportunities > 0
+      (send(us).extra_man_goals.to_f / send(us).extra_man_opportunities * 100).round(2)
+    else
+      'N/A'
+    end
+  end
+  
+  def assists_per_possession(us)
+    send(us).assists.to_f / possessions(us)
   end
   
   def assists_per_goal(us)
     (send(us).assists.to_f / send(us).goals).round 4
+  end
+  
+  def turnovers_per_possession(us)
+    send(us).turnovers.to_f / possessions(us)
+  end
+  
+  def extra_man_per_possession(us)
+    send(us).extra_man_opportunities.to_f / possessions(us)
+  end
+  
+  def man_down_per_possession(us)
+    us == :home ? them = :away : them = :home
+    send(them).extra_man_opportunities.to_f / possessions(us)
+  end
+  
+  def man_down_conversion(us)
+    us == :home ? them = :away : them = :home
+    if send(them).extra_man_opportunities > 0
+      (send(us).man_down_goals.to_f / send(them).extra_man_opportunities) * 100
+    else
+      'N/A'
+    end
+  end
+  
+  def save_percentage(us)
+    us == :home ? them = :away : them = :home
+    ( send(us).saves.to_f / send(them).shot_attempts ) * 100
+  end
+  
+  def saves_per_possession(us)
+    us == :home ? them = :away : them = :home
+    ( send(us).saves.to_f / possessions(them) )
   end
   
   def goals(us)

@@ -207,6 +207,10 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
     games - wins
   end
   
+  def goals_per_game
+    goals.to_f / games
+  end
+  
   def possessions
     faceoffs_won + clear_attempts + (opp_clear_attempts - opp_clear_success)
   end
@@ -292,7 +296,11 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
   end
   
   def extra_man_conversion
-    extra_man_goals.to_f / extra_man_opportunities * 100
+    (extra_man_goals.to_f / extra_man_opportunities) * 100
+  end
+  
+  def man_down_conversion
+    (man_down_goals.to_f / opp_extra_man_opportunities) * 100
   end
   
   def man_down_defense
@@ -301,6 +309,10 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
   
   def emo_reliance
     (extra_man_goals.to_f / goals) * 100
+  end
+  
+  def man_down_reliance
+    (man_down_goals.to_f / goals) * 100
   end
   
   def opp_emo_reliance
@@ -462,7 +474,6 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
     :opp_pyth => 50.0
     }
   end
-  
   
 end
 

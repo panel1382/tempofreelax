@@ -47,7 +47,19 @@ class GameStat < ActiveRecord::Base
   end
   
   def extra_man_conversion
-    extra_man_goals.to_f / extra_man_opportunities * 100
+    if extra_man_opportunities > 0
+      extra_man_goals.to_f / extra_man_opportunities * 100
+    else
+      "N/A"
+    end
+  end
+  
+  def emo_reliance
+    extra_man_goals.to_f / goals * 100
+  end
+  
+  def man_down_reliance
+    man_down_goals.to_f / goals * 100
   end
   
   def assists_per_goal

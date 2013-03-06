@@ -14,8 +14,33 @@ $(document).ready(function(){
          .addClass("floatingHeader");
          
    });*/
+
+   formatText();
+   boxScore_HeadToHead();
    
-   
-   sortTable()
+   sortTable();
    $(window).scroll(UpdateTableHeaders).trigger("scroll");
 });
+
+function formatText(){
+	// Round numbers
+   $('td:contains(.)').each(function(){
+		a = $(this).text()
+		b = Math.round(a*1000)/1000
+
+		if(b > 0){
+			$(this).text(b)
+		}
+	});
+	
+	$('tr td:contains(%)').each(function(){
+		$(this).siblings().each(function(){
+			var text = $(this).text()
+			if (text.indexOf){
+				if ( text.indexOf('%') === -1){
+					$(this).text( $(this).text() + ' %' )
+				}
+			}
+		})
+	});
+}

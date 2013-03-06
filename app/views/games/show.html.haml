@@ -1,91 +1,165 @@
 %p#notice= notice
 
 %h1
-  = "#{@game.teams[:away].name} at #{@game.teams[:home].name}"
+  = link_to "#{@game.teams[:away].name}", {:controller => 'teams', :action => 'show', :id => @game.teams[:away].id, :year => @game.date.year} 
+  at 
+  = link_to "#{@game.teams[:home].name}", {:controller => 'teams', :action => 'show', :id => @game.teams[:home].id, :year => @game.date.year} 
 %h3
   = @game.date.strftime "%a. %b. %-d, %Y"
 
-%table.center
+%table.box_score
   %tr
-    %th
-    %th{:colspan => 2} Home
-    %th{:colspan => 2} Away
-  %tr
-    %th
-    %th{:colspan => 2}= @game.teams[:home].name
-    %th{:colspan => 2}= @game.teams[:away].name
-  %tr
+    %td
+    %th{:colspan => 2}= "#{@game.teams[:home].name} (Home)"
+    %th{:colspan => 2}= "#{@game.teams[:away].name} (Away)"
+  %tr.heading
     %td 
-    %td Season Avg.
-    %td{:colspan=>2} Game
-    %td Season Avg.
-  %tr
+    %td Season Avg
+    %td{:colspan=>2, :class=>'center'} Game
+    %td Season Avg
+  %tr.descending
     %td Goals
-    %td= @home.goals
+    %td= @home.goals_per_game
     %td= @game.home.goals
     %td= @game.away.goals
-    %td= @away.goals
-  %tr
+    %td= @away.goals_per_game
+  %tr.skip
     %td  Pace
     %td= @home.pace
     %td= @game.possessions(:home)
     %td= @game.possessions(:away)
     %td= @away.pace
-  %tr
-    %td  Off Eff.
+  %tr.descending
+    %td  Off Eff
     %td= @home.offensive_efficiency
     %td= @game.offensive_efficiency :home
     %td= @game.offensive_efficiency :away
     %td= @away.offensive_efficiency
-  %tr
-    %td  Def Eff.
+  %tr.ascending
+    %td  Def Eff
     %td= @home.defensive_efficiency
     %td= @game.offensive_efficiency :away
     %td= @game.offensive_efficiency :home
     %td= @away.defensive_efficiency
   %tr
     %th{:colspan => 5} Possessions and Pace
-  %tr
+  %tr.descending
     %td Faceoff %
     %td= @home.faceoff_percentage
     %td= @game.faceoff_percentage :home
     %td= @game.faceoff_percentage :away
     %td= @away.faceoff_percentage
-  %tr
+  %tr.descending
     %td Clearing %
     %td= @home.offensive_clear_rate
     %td= @game.offensive_clear_rate :home
     %td= @game.offensive_clear_rate :away
     %td= @away.offensive_clear_rate
-  %tr
+  %tr.descending
     %td Riding %
     %td= @home.defensive_clear_rate
     %td= 100 - @game.offensive_clear_rate( :away )
     %td= 100 - @game.offensive_clear_rate( :home )
     %td= @away.defensive_clear_rate
-
-%p
-  %b ID:
-  = @game.id
-%p
-  %b Home team:
-  = @game.teams[:home].name
-%p
-  %b Away team:
-  = @game.teams[:away].name
-%p
-  %b Year:
-  = @game.date.year
-%p
-  %b Venue:
-  = @game.venue
-%p
-  %b Date:
-  = @game.date
+  %tr.descending
+    %td Poss %
+    %td= @home.pos_percentage
+    %td= @game.pos_percentage( :home )
+    %td= @game.pos_percentage( :away )
+    %td= @away.pos_percentage
+  %tr
+    %th{:colspan => 5} Shooting Stats
+  %tr.descending
+    %td Shots/Pos
+    %td= @home.shots_per_possession
+    %td= @game.shots_per_possession :home
+    %td= @game.shots_per_possession :away
+    %td= @away.shots_per_possession
+  %tr.descending
+    %td Shooting %
+    %td= @home.shooting_percentage
+    %td= @game.home.shooting_percentage
+    %td= @game.away.shooting_percentage
+    %td= @away.shooting_percentage
+  %tr.descending
+    %td eShooting %
+    %td= @home.effective_shooting_percentage
+    %td= @game.home.effective_shooting_percentage
+    %td= @game.away.effective_shooting_percentage
+    %td= @away.effective_shooting_percentage
+  %tr.descending
+    %td Assists/Pos
+    %td= @home.assists_per_possession
+    %td= @game.assists_per_possession :home
+    %td= @game.assists_per_possession :away
+    %td= @away.assists_per_possession
+  %tr.ascending
+    %td Turnovers/Pos
+    %td= @home.turnovers_per_possession
+    %td= @game.turnovers_per_possession :home
+    %td= @game.turnovers_per_possession :away
+    %td= @away.turnovers_per_possession
+  %tr
+    %th{:colspan => 5} Extra Man Stats
+  %tr
+    %td
+    %td{:colspan => 2} Man Up
+    %td{:colspan => 2} Man Down
+  %tr.skip
+    %td EMO / Pos
+    %td= @home.extra_man_per_possession
+    %td= @game.extra_man_per_possession :home
+    %td= @game.man_down_per_possession :away
+    %td= @away.opp_extra_man_per_possession
+  %tr.skip
+    %td EMO %
+    %td= @home.extra_man_conversion
+    %td= @game.home.extra_man_conversion
+    %td= @game.man_down_conversion :away
+    %td= @away.man_down_conversion
+  %tr.skip
+    %td EMO Reliance %
+    %td= @home.emo_reliance
+    %td= @game.home.emo_reliance
+    %td= @game.away.man_down_reliance
+    %td= @away.man_down_reliance
+  %tr
+    %td
+    %td{:colspan => 2} Man Down
+    %td{:colspan => 2} Man Up
+  %tr.skip
+    %td EMO / Pos
+    %td= @home.opp_extra_man_per_possession
+    %td= @game.man_down_per_possession :home
+    %td= @game.extra_man_per_possession :away
+    %td= @away.extra_man_per_possession
+  %tr.skip
+    %td EMO %
+    %td= @home.man_down_conversion
+    %td= @game.man_down_conversion :home
+    %td= @game.away.extra_man_conversion
+    %td= @away.extra_man_conversion
+  %tr.skip
+    %td EMO Reliance %
+    %td= @home.man_down_reliance
+    %td= @game.home.man_down_reliance
+    %td= @game.away.emo_reliance
+    %td= @away.emo_reliance
+  %tr
+    %th{:colspan => 5}
+  %tr.descending
+    %td Save %
+    %td= @home.save_percentage
+    %td= @game.save_percentage :home
+    %td= @game.save_percentage :away
+    %td= @away.save_percentage
+  %tr.ascending
+    %td Save / Def Pos
+    %td= @home.saves_per_possession
+    %td= @game.saves_per_possession :home
+    %td= @game.saves_per_possession :away
+    %td= @away.saves_per_possession
 
 %p= link_to 'Box Score', "http://stats.ncaa.org/game/box_score/#{@game.ncaa_id}"
-
-//%p= link_to 'Home Stats', @game.home
-//%p= link_to 'Away Stats', @game.away
 
 = link_to 'Back', games_path
