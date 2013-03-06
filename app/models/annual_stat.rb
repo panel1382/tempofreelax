@@ -67,7 +67,7 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
   def self.available_years
     require 'date'
     range = Date.new(2000,01,01)..Date.today
-    years = AnnualStat.where(:year => range ).select('year').uniq
+    years = AnnualStat.where(:year => range ).select('year').order('year ASC').uniq
   end
   
   def ranks
