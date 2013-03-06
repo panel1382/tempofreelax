@@ -33,9 +33,11 @@ function formatText(){
 		}
 	});
 	
-	$('tr td:contains(%)').each(function(){
+	$('tr td:nth-child(1):contains(%)').each(function(){
 		$(this).siblings().each(function(){
+			
 			var text = $(this).text()
+			console.log(text)
 			if (text.indexOf){
 				if ( text.indexOf('%') === -1){
 					$(this).text( $(this).text() + ' %' )
