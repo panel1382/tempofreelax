@@ -1,0 +1,7 @@
+-require 'date'
+%h1= "Logs as of #{DateTime.now.to_s}"
+
+%div
+  = @parseErrorLog.join '<br />'
+  
+%h3= '============ END ============'
