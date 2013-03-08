@@ -21,7 +21,7 @@ Tempofreelax::Application.routes.draw do
 
   resources :games
   
-  match 'games/page/:page' => 'games#index'
+  match 'calendar/:date' => 'games#index'
   match 'teams/page/:page' => 'teams#index'
 #  match 'teams/:year/:id' => 'teams#show'
   match 'teams/:id/:year' => 'teams#show'

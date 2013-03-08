@@ -5,8 +5,8 @@ namespace :bg do
     require 'nokogiri'
     require 'open-uri'
     require 'date'
-    
-    doc = 'lib/assets/games_2013.csv'
+    logname = "#{Date.today.to_s}_games.csv"
+    doc = File.join('lib','assets',logname)
     
     # set up to check for entire 2013 season
     start_date = Date.new 2013, 2, 2
@@ -20,12 +20,60 @@ namespace :bg do
       dom = Nokogiri::HTML(open(scoreboard))
     
       dom.css('.light_grey_heading a').each do |el|
-        gameid = el['href'].split('/').last      
+        gameid = el['href'].split('/').last.split('?').first     
         games.push gameid
       end
     end
+    log = File.open(doc, "w", :type => 'text/csv; charset=utf-8')
+    log.write( games.join( "\n" ) ) 
+    log.close
+    begin
+      s3 = Datastore.new
+      s3.add logname, open(doc)
+      File.delete log.path
+    rescue
+      puts "Unable to write to S3"    
+    end
+  end
+  
+  desc "Takes list of games stored on s3 and grabs them from NCAA site"
+  task :loadGames => :environment do
+    require 'csv'
+    require 'date'
     
-    File.open(doc, "w", :type => 'text/csv; charset=utf-8'){ |f| f << games.join("\n")}
+    # open error log
+    errorLog = File.open( File.join('lib','assets',"#{Date.today.to_s}_parseErrorLog.txt",'w') )
+    parser = Parser.new
+    errorLog.write("\n\n=====#{DateTime.now.to_s}=====\n")    
+    
+      
+    doc = File.join 'lib','assets',"#{Date.today.to_s}_games.csv"
+    begin
+      csv_txt = File.read(doc)
+      data = CSV.parse csv_txt, :headers => false
+    rescue
+      kill "Unable to open file: #{doc}"
+      errorLog.write("#{DateTime.now.to_s}: Unable to open file: #{doc}")
+    end
+    
+    data.each do |row|
+      begin
+        parser.parse(row[0].to_s)
+        errorLog.write("#{DateTime.now.to_s}: Added game: #{row[0].to_s}")
+      rescue
+        errorLog.write("#{DateTime.now.to_s}: Unable to add` game: #{row[0].to_s}")
+      end
+    end
+    
+    begin
+      AnnualStat.sum_all(year)
+      AnnualStat.rank_all(year)
+    rescue
+      puts "Unable to sum or ranks year: #{year.to_s}"
+      errorLog.write("#{DateTime.now.to_s}: Unable to sum or ranks year: #{year.to_s}")
+    end
+    errorLog.write("\n\n=========END========\n\n\n\n") 
+    
   end
   
   desc "Go through the AnnualStats in a year and ranking the teams"
@@ -128,36 +176,6 @@ namespace :bg do
     end            
   end
   
-  task :loadGames => :environment do
-    require 'csv'
-    require 'date'
-    errorLog = File.open('lib/assets/parseErrorLog','a+')
-    years = [2013] #(2010..2013).to_a
-    parser = Parser.new
-    errorLog.write("\n\n=====#{DateTime.now.httpdate}=====\n")
-    years.each do |year|    
-      doc = "lib/assets/games_#{year.to_s}.csv"
-      begin
-        csv_txt = File.read(doc)
-        data = CSV.parse csv_txt, :headers => false
-      rescue
-        kill "Unable to open file: #{doc}"
-      end
-      
-      data.each do |row|
-        parser.parse(row[0].to_s)
-      end
-      
-      begin
-        AnnualStat.sum_all(year)
-        AnnualStat.rank_all(year)
-      rescue
-        puts "Unable to sum or ranks year: #{year.to_s}"
-      end
-    end
-    errorLog.write('\n\n=========END========\n\n\n\n') 
-  end
-  
   task :sumAll => :environment do
     #AnnualStat.sum_all(2010)
     #AnnualStat.rank_all(2010)
@@ -198,5 +216,11 @@ namespace :bg do
     AnnualStat.sum_all(2013)
     AnnualStat.rank_all(2013)
     PlayerAnnualStat.sumAll(2013)
+  end
+  
+  task :post => :environment do
+    s3 = Datastore.new
+    thing=s3.bucket.objects.find('2013-03-08_games.csv').content
+    puts thing
   end
 end

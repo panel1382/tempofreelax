@@ -22,6 +22,7 @@ end
 
 group :development, :test do
   gem "sqlite3"
+  gem 'ruby-debug19'
 end
 
 group :test do
@@ -40,6 +41,8 @@ gem 'authlogic'
 gem 'faraday'
 gem 'active_record_or'
 gem 'compass-rails'
+gem 's3'
+gem 'aws'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

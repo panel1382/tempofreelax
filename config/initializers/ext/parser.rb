@@ -270,7 +270,8 @@
     puts gameID
     if(Game.find_by_ncaa_id(gameID).nil?)
       initHash
-      errorLog = File.open('lib/assets/parseErrorLog','a+')
+      today = Date.today.to_s
+      errorLog = File.open("lib/assets/#{today}_parseErrorLog",'a+')
       boxscore = 'http://stats.ncaa.org/game/box_score/@@gameid@@'
       playbyplay = 'http://stats.ncaa.org/game/play_by_play/@@gameid@@'
       
@@ -318,7 +319,7 @@
         game_obj
       rescue
         puts "Game: #{gameID} had an HTTP Error"
-        errorLog.write("http://stats.ncaa.org/game/play_by_play/#{gameID}\n")
+        errorLog.write("#{DateTime.now.to_s}: #{gameID}\n") 
       end
     end
   end

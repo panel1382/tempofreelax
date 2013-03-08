@@ -2,9 +2,16 @@ class GamesController < ApplicationController
   # GET /games
   # GET /games.json
   def index
-    params[:year] ? range = Date.new(params[:year].to_i,1,1)..Date.new(params[:year].to_i,12,31) : range = Date.new(1900,1,1)..Date.new(3000,12,31)
-    params[:page] ? @page = params[:page] : @page = 1
-    @games = Game.where(:date => range).order('`date` ASC').page(@page)
+    require 'date'
+    
+    if params[:date]
+      arr = params[:date].split('-')
+      @date = Date.new arr[0].to_i, arr[1].to_i, arr[2].to_i
+    else
+      @date = Date.today
+    end
+    date = @date.to_s + '%'
+    @games = Game.where("date like ?", date)
     
     respond_to do |format|
       format.html # index.html.erb
@@ -18,6 +25,10 @@ class GamesController < ApplicationController
     @game = Game.find(params[:id])
     @home = AnnualStat.where(:year => Date.new(@game.date.year), :team_id => @game.teams[:home].id).first
     @away = AnnualStat.where(:year => Date.new(@game.date.year), :team_id => @game.teams[:away].id).first
+    
+    @prev = Game.find(params[:id].to_i - 1)
+    @next = Game.find(params[:id].to_i + 1)
+    
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @game }

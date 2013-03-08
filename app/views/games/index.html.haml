@@ -1,27 +1,27 @@
-=title "Games"
+=title "Games &raquo; #{@date}".html_safe
 
-%p.pagination= paginate @games
-
-%table
-  %tr
-    %th Score
-    %th Home team
-    %th Away team
-    %th Venue
-    %th Date
-
-  - @games.each do |game|
-    -home = Team.find(game.home_team)
-    -away = Team.find(game.away_team)
+%table.calendar
+  %tr.nav
+    %td{:colspan => 2, :class => 'left'}= link_to "&larr; #{@date.prev_day.to_s}".html_safe, :date => @date.prev_day
+    %td{:colspan => 2, :class => 'right'}= link_to "#{@date.next_day.to_s} &rarr;".html_safe, :date => @date.next_day
+  - if @games.length > 0
     %tr
-      %td= link_to "#{game.game_stats[0].goals}-#{game.game_stats[1].goals}", game
-      %td= link_to home.name, team_path(home, :year => game.date.year)
-      %td= link_to away.name, team_path(away, :year => game.date.year)
-      %td= game.venue
-      %td= game.date.strftime "%m/%d/%Y"
-
+      %th Score
+      %th Away team
+      %th Home team
+      %th Venue
+    - @games.each do |game|
+      %tr
+        %td= link_to "#{game.away.goals}-#{game.home.goals}", game
+        %td= link_to game.teams[:away].name, team_path(game.teams[:away], :year => game.date.year)
+        %td= link_to game.teams[:home].name, team_path(game.teams[:home], :year => game.date.year)
+        %td= game.venue
+  - else
+    %tr 
+      %td{:colspan=> 4, :class => 'empty'} No games scheduled for today
+  %tr.nav
+    %td{:colspan => 2, :class => 'left'}= link_to "&larr; #{@date.prev_day.to_s}".html_safe, :date => @date.prev_day
+    %td{:colspan => 2, :class => 'right'}= link_to "#{@date.next_day.to_s} &rarr;".html_safe, :date => @date.next_day
+ 
 %br
 
-%p.pagination= paginate @games
-
-= link_to 'New Game', new_game_path

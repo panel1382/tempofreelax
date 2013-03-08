@@ -1,3 +1,4 @@
+-title "#{@game.date.year} » Game Detail"
 %p#notice= notice
 
 %h1
@@ -6,10 +7,15 @@
   = link_to "#{@game.teams[:home].name}", {:controller => 'teams', :action => 'show', :id => @game.teams[:home].id, :year => @game.date.year} 
 %h3
   = @game.date.strftime "%a. %b. %-d, %Y"
+%h3= @game.date.to_s
 
 %table.box_score
-  %tr
+  %tr.schedule
+    %td{:colspan => 2}= link_to "&larr; #{@prev.teams[:away].name} at #{@prev.teams[:home].name} ".html_safe, @prev
     %td
+    %td{:colspan => 2}= link_to " #{@next.teams[:away].name} at #{@next.teams[:home].name} &rarr;".html_safe, @next
+  %tr
+    %th
     %th{:colspan => 2}= "#{@game.teams[:home].name} (Home)"
     %th{:colspan => 2}= "#{@game.teams[:away].name} (Away)"
   %tr.heading
@@ -146,19 +152,23 @@
     %td= @game.away.emo_reliance
     %td= @away.emo_reliance
   %tr
-    %th{:colspan => 5}
+    %th{:colspan => 5} Goalies
   %tr.descending
     %td Save %
     %td= @home.save_percentage
     %td= @game.save_percentage :home
     %td= @game.save_percentage :away
     %td= @away.save_percentage
-  %tr.ascending
+  %tr.ascending.bottom
     %td Save / Def Pos
     %td= @home.saves_per_possession
     %td= @game.saves_per_possession :home
     %td= @game.saves_per_possession :away
     %td= @away.saves_per_possession
+  %tr.schedule
+    %td{:colspan => 2}= link_to "&larr; #{@prev.teams[:away].name} at #{@prev.teams[:home].name} ".html_safe, @prev
+    %td
+    %td{:colspan => 2}= link_to " #{@next.teams[:away].name} at #{@next.teams[:home].name} &rarr;".html_safe, @next
 
 %p= link_to 'Box Score', "http://stats.ncaa.org/game/box_score/#{@game.ncaa_id}"
 

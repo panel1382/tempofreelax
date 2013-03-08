@@ -34,4 +34,9 @@ Tempofreelax::Application.configure do
 
   # Expands the lines which load the assets
   config.assets.debug = true
+  
+  # S3 Tokens
+  ENV['access_key'] = 'AKIAJNC2GYDFUSYACCLA'
+  ENV['secret_key'] = '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'
+  ENV['bucket'] = 'panel-tempofreelax-dev'
 end
