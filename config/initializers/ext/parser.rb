@@ -100,7 +100,6 @@
         end  
       end
     end
-    puts @key
   end
   
   def handleBox
@@ -188,7 +187,6 @@
     # then takes that data to create or update a player game stat row.
     create_legend(true)
     k = @key
-    puts k
     times = [:penalty_seconds, :goalie_seconds]
     values = row.css('td')
     player = {}
@@ -313,8 +311,6 @@
         
         # parses and saves player stats
         handlePlayers
-        
-        puts "#{@home} \n #{@away}"
         
         game_obj
       rescue

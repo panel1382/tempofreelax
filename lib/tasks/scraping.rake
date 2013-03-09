@@ -1,12 +1,13 @@
 namespace :bg do
 
   desc "Scrape NCAA stats site for boxscores"
-  task :getGames => :environment do 
+  task :parseGames => :environment do 
     require 'nokogiri'
     require 'open-uri'
     require 'date'
     logname = "#{Date.today.to_s}_games.csv"
-    doc = File.join('lib','assets',logname)
+    doc = File.join('tmp','logs',logname)
+    year = Date.today.year
     
     # set up to check for entire 2013 season
     start_date = Date.new 2013, 2, 2
@@ -24,9 +25,11 @@ namespace :bg do
         games.push gameid
       end
     end
+    
     log = File.open(doc, "w", :type => 'text/csv; charset=utf-8')
     log.write( games.join( "\n" ) ) 
     log.close
+    
     begin
       s3 = Datastore.new
       s3.add logname, open(doc)
@@ -34,6 +37,36 @@ namespace :bg do
     rescue
       puts "Unable to write to S3"    
     end
+    
+    # open error log
+    parsingLog = File.join('parse',"#{Date.today.to_s}_parseLog.txt")
+    errorLog = File.open( parsingLog, 'w' )
+    parser = Parser.new
+    errorLog.write("\n\n=====#{DateTime.now.to_s}=====\n")
+    
+    puts games.inspect
+    
+    games.each do |row|
+      begin
+        parser.parse(row.to_s)
+        errorLog.write("#{DateTime.now.to_s}: Added game: #{row.to_s}")
+      rescue
+        errorLog.write("#{DateTime.now.to_s}: Unable to add game: #{row.to_s}")
+      end
+    end
+    
+    begin
+      AnnualStat.sum_all(year)
+      AnnualStat.rank_all(year)
+      PlayerAnnualStat.sum_all(year)
+    rescue
+      puts "Unable to sum or ranks year: #{year.to_s}"
+      errorLog.write("#{DateTime.now.to_s}: Unable to sum or ranks year: #{year.to_s}")
+    end
+    errorLog.write("\n\n=========END========\n\n\n\n")
+    errorLog.close
+    
+    s3.add parsingLog, open(parsingLog)
   end
   
   desc "Takes list of games stored on s3 and grabs them from NCAA site"
@@ -42,12 +75,12 @@ namespace :bg do
     require 'date'
     
     # open error log
-    errorLog = File.open( File.join('lib','assets',"#{Date.today.to_s}_parseErrorLog.txt",'w') )
+    errorLog = File.open( File.join('parse',"#{Date.today.to_s}_parseErrorLog.txt",'w') )
     parser = Parser.new
     errorLog.write("\n\n=====#{DateTime.now.to_s}=====\n")    
     
       
-    doc = File.join 'lib','assets',"#{Date.today.to_s}_games.csv"
+    doc = File.join 'games',"#{Date.today.to_s}_games.csv"
     begin
       csv_txt = File.read(doc)
       data = CSV.parse csv_txt, :headers => false
