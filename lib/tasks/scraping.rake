@@ -26,7 +26,7 @@ namespace :bg do
       end
     end
     
-    log = File.open(doc, "w", :type => 'text/csv; charset=utf-8')
+    log = File.open(logname, "w", :type => 'text/csv; charset=utf-8')
     log.write( games.join( "\n" ) ) 
     log.close
     
