@@ -39,7 +39,7 @@ namespace :bg do
     end
     
     # open error log
-    parsingLog = File.join('parse',"#{Date.today.to_s}_parseLog.txt")
+    parsingLog = "#{Date.today.to_s}_parseLog.txt"
     errorLog = File.open( parsingLog, 'w' )
     parser = Parser.new
     errorLog.write("\n\n=====#{DateTime.now.to_s}=====\n")
