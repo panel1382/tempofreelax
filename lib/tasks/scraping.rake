@@ -6,7 +6,7 @@ namespace :bg do
     require 'open-uri'
     require 'date'
     logname = "#{Date.today.to_s}_games.csv"
-    doc = File.join('tmp',logname)
+    doc = File.join(logname)
     year = Date.today.year
     
     # set up to check for entire 2013 season
@@ -60,8 +60,8 @@ namespace :bg do
       AnnualStat.rank_all(2013)
       PlayerAnnualStat.sum_all(2013)
     rescue Exception => e
-      puts "Unable to sum or ranks year: #{year.to_s}"
-      errorLog.write("#{DateTime.now.to_s}: Unable to sum or ranks year: #{year.to_s}\n#{e.inspect}")
+      puts "Unable to sum or ranks year: #{year.to_s}\n#{e.inspect}"
+      errorLog.write("#{DateTime.now.to_s}: Unable to sum or ranks year: #{year.to_s}")
     end
     errorLog.write("\n\n=========END========\n\n\n\n")
     errorLog.close
