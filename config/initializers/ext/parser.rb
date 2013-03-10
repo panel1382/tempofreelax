@@ -266,6 +266,7 @@
   
   def parse(gameID)
     puts gameID
+    errorLog = "#{Date.today.to_s}_parseLog.txt"
     if(Game.find_by_ncaa_id(gameID).nil?)
       initHash
       today = Date.today.to_s
