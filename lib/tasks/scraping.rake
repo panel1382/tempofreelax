@@ -34,8 +34,8 @@ namespace :bg do
       s3 = Datastore.new
       s3.add logname, open(doc)
       File.delete log.path
-    rescue
-      puts "Unable to write to S3"    
+    rescue Exception => e
+      puts "Unable to write to S3\n#{e}"    
     end
     
     # open error log
@@ -99,8 +99,9 @@ namespace :bg do
     end
     
     begin
-      AnnualStat.sum_all(year)
-      AnnualStat.rank_all(year)
+      AnnualStat.sum_all(2013)
+      AnnualStat.rank_all(2013)
+      PlayerAnnualStat.sumAll(2013)
     rescue
       puts "Unable to sum or ranks year: #{year.to_s}"
       errorLog.write("#{DateTime.now.to_s}: Unable to sum or ranks year: #{year.to_s}")
