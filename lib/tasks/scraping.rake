@@ -58,7 +58,7 @@ namespace :bg do
     begin
       AnnualStat.sum_all(2013)
       AnnualStat.rank_all(2013)
-      PlayerAnnualStat.sum_all(2013)
+      PlayerAnnualStat.sumAll(2013)
     rescue Exception => e
       puts "Unable to sum or ranks year: #{year.to_s}\n#{e.inspect}"
       errorLog.write("#{DateTime.now.to_s}: Unable to sum or ranks year: #{year.to_s}")
