@@ -49,9 +49,9 @@ namespace :bg do
     games.each do |row|
       begin
         parser.parse(row.to_s)
-        errorLog.write("#{DateTime.now.to_s}: Added game: #{row.to_s}")
+        errorLog.write("#{DateTime.now.to_s}: Added game: #{row.to_s}\n")
       rescue
-        errorLog.write("#{DateTime.now.to_s}: Unable to add game: #{row.to_s}")
+        errorLog.write("#{DateTime.now.to_s}: Unable to add game: #{row.to_s}\n")
       end
     end
     
@@ -61,7 +61,7 @@ namespace :bg do
       PlayerAnnualStat.sum_all(year)
     rescue
       puts "Unable to sum or ranks year: #{year.to_s}"
-      errorLog.write("#{DateTime.now.to_s}: Unable to sum or ranks year: #{year.to_s}")
+      errorLog.write("#{DateTime.now.to_s}: Unable to sum or ranks year: #{year.to_s}\n")
     end
     errorLog.write("\n\n=========END========\n\n\n\n")
     errorLog.close
@@ -244,11 +244,17 @@ namespace :bg do
   
   task :quick => :environment do
     require 'date'
-    teams = [10,14,15,26,27,31,35,45,46,53,58,60,66]
-    teams.each{|t_id| AnnualStat.find_or_create(6, 2013) }
-    AnnualStat.sum_all(2013)
-    AnnualStat.rank_all(2013)
-    PlayerAnnualStat.sumAll(2013)
+    year = 2013
+    start = Date.new(year,1,1)
+    finish = Date.new(year,12,31)
+    a = Game.where(:date => start..finish).select(:home_team).uniq
+    b = Game.where(:date => start..finish).select(:away_team).uniq
+    
+    teams =[]
+    a.each {|t| teams.push t.home_team}
+    b.each {|t| teams.push t.away_team}
+    puts teams.uniq.inspect
+    puts teams.uniq.length
   end
   
   task :post => :environment do

@@ -5,18 +5,26 @@ class Game < ActiveRecord::Base
   
   accepts_nested_attributes_for :game_stats
   def home
-    if game_stats[0].home
-      game_stats[0]
+    if game_stats.length > 0
+      if game_stats[0].home
+        game_stats[0]
+      else
+        game_stats[1]
+      end
     else
-      game_stats[1]
-    end   
+      nil
+    end  
   end
   
   def away
-    if game_stats[0].home
-      game_stats[1]
+    if game_stats.length > 0
+      if game_stats[0].home
+        game_stats[1]
+      else
+        game_stats[0]
+      end
     else
-      game_stats[0]
+      nil
     end   
   end
   

@@ -12,15 +12,15 @@
     %tr
       %th Team
       %th W-L
-      %th Pyth
-      %th Off. Eff.
-      %th Def. Eff.
-      %th S.O.S.
-      %th Pace
-      %th Pos. %
-      %th Faceoff %
-      %th Off Clear %
-      %th Def Clear %
+      %th= Stat.find_by_slug(:pyth).abbreviation
+      %th= Stat.find_by_slug(:adjusted_offensive_efficiency).abbreviation
+      %th= Stat.find_by_slug(:adjusted_defensive_efficiency).abbreviation
+      %th= Stat.find_by_slug(:opp_pyth).abbreviation
+      %th= Stat.find_by_slug(:pace).abbreviation
+      %th= Stat.find_by_slug(:pos_percentage).abbreviation
+      %th= Stat.find_by_slug(:faceoff_percentage).abbreviation
+      %th= Stat.find_by_slug(:offensive_clear_rate).abbreviation
+      %th= Stat.find_by_slug(:defensive_clear_rate).abbreviation
   
   %tbody  
     - @annual_stats.each do |a|

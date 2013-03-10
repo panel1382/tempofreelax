@@ -60,9 +60,9 @@
       %td= "#{@annual_stat.effective_shooting_percentage.round 2}%"
       %td= "#{@annual_stat.opp_effective_shooting_percentage.round 2}%"
     %tr
-      %td Assists/Pos
-      %td= @annual_stat.assists_per_possession.round 4
-      %td= @annual_stat.opp_assists_per_possession.round 4
+      %td Assists/Goal
+      %td= @annual_stat.assists_per_goal.round 4
+      %td= @annual_stat.opp_assists_per_goal.round 4
     %tr
       %td TO/Pos
       %td= @annual_stat.turnovers_per_possession.round 4

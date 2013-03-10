@@ -1,4 +1,7 @@
 class AnnualStat < ActiveRecord::Base
+  @@teams_2013 = 	[34,43,32,25,8,12,58,1,10,26,42,11,18,59,16,54,3,
+    47,61,13,49,22,63,9,24,64,14,45,46,27,55,48,17,28,36,15,66,38,
+    30,4,60,50,33,56,6,40,53,19,29,2,57,21,51,23,41,65,35,31,52,20,44,5,7,37]
   @exponent = 3.1
   
   belongs_to :team
@@ -9,11 +12,10 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
   def self.sum_all(year)
     start = Date.new(year,1,1)
     finish = Date.new(year,12,31)
-    a = Game.where(:date => start..finish).select(:home_team).uniq
     
-    a.each_with_index do |team, i|
-      stat = AnnualStat.where(:team_id => team.home_team, :year => start).first
-      stat = AnnualStat.new(:team_id => team.home_team, :year => start) if !stat.is_a?( AnnualStat )
+    @@teams_2013.each do |team_id|
+      stat = AnnualStat.where(:team_id => team_id, :year => start).first
+      stat = AnnualStat.new(:team_id => team_id, :year => start) if !stat.is_a?( AnnualStat )
       stat.sum
     end
   end
@@ -44,7 +46,6 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
       as = AnnualStat.new(hash)
       as.save
     end
-    puts as.id
     as
   end
   
@@ -86,31 +87,41 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
     if methods.include? stat
       
       s = Stat.find_or_create_by_slug(stat.to_s)
-      rank = NationalRank.where( :year => year.year, :stat_id => s.id, :team_id => team.id, :conference => false ).first
+      begin
+        rank = NationalRank.where( :year => year.year, :stat_id => s.id, :team_id => team.id, :conference => false ).first
       
-      if rank.nil?
-        rank = national_ranks.build
-        rank.team_id = team.id
-        rank.stat_id = s.id
-        rank.year = year.year  
-        rank.conference = false
-      end
+        if rank.nil?
+          rank = national_ranks.build
+          rank.team_id = team.id
+          rank.stat_id = s.id
+          rank.year = year.year  
+          rank.conference = false
+        end
     
-      all = AnnualStat.find_all_by_year year
-      list = []
-      all.each do |row|
-        n = row.send stat
-        list.push(n) if !n.nil? 
-      end
+        all = AnnualStat.find_all_by_year year
+        list = []
+        all.each do |row|
+          n = row.send stat
+          if !n.nil?
+            list.push(n) if !n.nan?
+          end
+        end
       
-      if list.length > 0
-        list.sort!
-        list.reverse! if s.order == 'descending'
-        i = list.index( send(stat) )
-        rank.rank = i + 1 if !i.nil?
-      end
+        if list.length > 0
+          begin
+            list.sort!
+          rescue
+            puts list.inspect
+          end
+          list.reverse! if s.order == 'descending'
+          i = list.index( send(stat) )
+          rank.rank = i + 1 if !i.nil?
+        end
       
-      rank.save    
+        rank.save
+      rescue
+        puts "Unable to rank #{stat.to_s} for AnnualStat #{id}"
+      end
     end
   end
   
@@ -124,14 +135,19 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
     opp = []
     
     home_games.each do |game|
-      actual.push(game.home)
-      opp.push(game.away)
-      us[:wins]+= 1 if game.home.goals > game.away.goals
+      if !(game.home.nil? or game.away.nil?)
+        actual.push game.home
+        opp.push(game.away)
+        us[:wins]+= 1 if game.home.goals > game.away.goals
+      end
     end
+    
     away_games.each do |game|
-      actual.push game.away
-      opp.push game.home
-      us[:wins]+= 1 if game.home.goals < game.away.goals
+      if !(game.home.nil? or game.away.nil?)
+        actual.push game.away       
+        opp.push game.home 
+        us[:wins]+= 1 if game.home.goals < game.away.goals
+      end
     end
     
     actual.each do |game|
@@ -163,14 +179,12 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
     offense = 0.0
     defense = 0.0
     all_pyth = 0.0
-    puts "#{team.name}: #{n}"
     opps.each do |opp|
       if !opp.nil?
         offense += opp.offensive_efficiency
         defense += opp.defensive_efficiency
         all_pyth += opp.pyth
       else
-        puts opp.inspect
         n -= 1
       end
     end
@@ -182,8 +196,9 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
       def_adj = 1.0
       off_adj = 1.0
     end
-    
-    update_attributes :off_adj => off_adj, :def_adj => def_adj, :opp_pyth => opp_pyth
+    if !(off_adj.nan? or def_adj.nan? or opp_pyth.nan?)
+      update_attributes :off_adj => off_adj, :def_adj => def_adj, :opp_pyth => opp_pyth
+    end
   end
   
   def game_list
