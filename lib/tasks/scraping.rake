@@ -6,7 +6,7 @@ namespace :bg do
     require 'open-uri'
     require 'date'
     logname = "#{Date.today.to_s}_games.csv"
-    doc = File.join('tmp','logs',logname)
+    doc = File.join('tmp',logname)
     year = Date.today.year
     
     # set up to check for entire 2013 season
@@ -35,7 +35,7 @@ namespace :bg do
       s3.add logname, open(doc)
       File.delete log.path
     rescue Exception => e
-      puts "Unable to write to S3\n#{e}"    
+      puts "Unable to write to S3\n#{e.inspect}"    
     end
     
     # open error log
@@ -56,12 +56,12 @@ namespace :bg do
     end
     
     begin
-      AnnualStat.sum_all(year)
-      AnnualStat.rank_all(year)
-      PlayerAnnualStat.sum_all(year)
-    rescue
+      AnnualStat.sum_all(2013)
+      AnnualStat.rank_all(2013)
+      PlayerAnnualStat.sum_all(2013)
+    rescue Exception => e
       puts "Unable to sum or ranks year: #{year.to_s}"
-      errorLog.write("#{DateTime.now.to_s}: Unable to sum or ranks year: #{year.to_s}\n")
+      errorLog.write("#{DateTime.now.to_s}: Unable to sum or ranks year: #{year.to_s}\n#{e.inspect}")
     end
     errorLog.write("\n\n=========END========\n\n\n\n")
     errorLog.close
