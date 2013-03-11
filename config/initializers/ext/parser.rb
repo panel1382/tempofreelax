@@ -271,7 +271,7 @@
       initHash
       today = Date.today.to_s
       gameID = gameID.to_s if gameID.is_a? Fixnum
-      errorLog = File.open("lib/assets/#{today}_parseErrorLog",'a+')
+      errorLog = File.open("#{today}_parseErrorLog",'w')
       boxscore = 'http://stats.ncaa.org/game/box_score/@@gameid@@'
       playbyplay = 'http://stats.ncaa.org/game/play_by_play/@@gameid@@'
       
