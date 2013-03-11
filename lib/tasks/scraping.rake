@@ -48,8 +48,8 @@ namespace :bg do
     
     games.each do |row|
       begin
-        parser.parse(row.to_s)
-        errorLog.write("#{DateTime.now.to_s}: Added game: #{row.to_s}\n")
+        game = parser.parse(row.to_s)
+        errorLog.write("#{DateTime.now.to_s}: Added game: #{row.to_s} - InternalID: #{game.id}\n")
       rescue
         errorLog.write("#{DateTime.now.to_s}: Unable to add game: #{row.to_s}\n")
       end
@@ -244,18 +244,8 @@ namespace :bg do
   end
   
   task :quick => :environment do
-    require 'date'
-    year = 2013
-    start = Date.new(year,1,1)
-    finish = Date.new(year,12,31)
-    a = Game.where(:date => start..finish).select(:home_team).uniq
-    b = Game.where(:date => start..finish).select(:away_team).uniq
-    
-    teams =[]
-    a.each {|t| teams.push t.home_team}
-    b.each {|t| teams.push t.away_team}
-    puts teams.uniq.inspect
-    puts teams.uniq.length
+    p = Parser.new
+    p.parse 1872622
   end
   
   task :post => :environment do

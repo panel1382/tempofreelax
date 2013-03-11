@@ -270,9 +270,11 @@
     if(Game.find_by_ncaa_id(gameID).nil?)
       initHash
       today = Date.today.to_s
+      gameID = gameID.to_s if gameID.is_a? Fixnum
       errorLog = File.open("lib/assets/#{today}_parseErrorLog",'a+')
       boxscore = 'http://stats.ncaa.org/game/box_score/@@gameid@@'
       playbyplay = 'http://stats.ncaa.org/game/play_by_play/@@gameid@@'
+      
       
       #byquarter is broken on the NCAA side
       #byquarter = 'http://stats.ncaa.org/game/period_stats/@@gameid@@'
@@ -314,8 +316,8 @@
         handlePlayers
         
         game_obj
-      rescue
-        puts "Game: #{gameID} had an HTTP Error"
+      rescue Exception => e
+        puts "Game: #{gameID} had an HTTP Error\n#{e.inspect}"
         errorLog.write("#{DateTime.now.to_s}: #{gameID}\n") 
       end
     end
