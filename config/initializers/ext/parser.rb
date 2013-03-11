@@ -226,7 +226,7 @@
     
   def fixTime(string)
     arr = string.split('/')
-    date = DateTime.parse(arr[2]+'-'+arr[0]+'-'+arr[1])
+    date = Date.parse(arr[2]+'-'+arr[0]+'-'+arr[1])
     date
   end
   
@@ -298,8 +298,17 @@
           :ncaa_id => gameID
         }
         
-        game_obj = Game.new(game_data)
+        game_obj = Game.where(:home_team => home.id, :away_team => away.id, :date => fixTime(meta[0].text)).first
+        puts game_obj.inspect
+        
+        if game_obj.nil?
+          game_obj = Game.new(game_data)
+        else
+          game_obj.ncaa_id = game_data[:ncaa_id]
+        end
         game_obj.save
+        puts game_obj.inspect
+        
         @game_id = game_obj.id
         
         @home[:team_id] = home.id
@@ -320,6 +329,8 @@
         puts "Game: #{gameID} had an HTTP Error\n#{e.inspect}"
         errorLog.write("#{DateTime.now.to_s}: #{gameID}\n") 
       end
+    else
+      Game.find_by_ncaa_id(gameID)
     end
   end
 

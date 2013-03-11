@@ -17,7 +17,7 @@
     = f.text_field :slug
   .field
     = f.label :order, "Sort Order: "
-    = f.select( :order, options_for_select([['Ascending','ascending'],['Descending','descending']]))
+    = f.select( :order, options_for_select([['Ascending','ascending'],['Descending','descending']], @stat.order))
   .field
     = f.label :description
     = f.text_area :description

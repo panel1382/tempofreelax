@@ -187,27 +187,28 @@ namespace :bg do
   
   desc "Processes LaxPower schedule stored locally"
   task :parseSchedule => :environment do
-    require 'csv'
+    require 'nokogiri'
+    require 'open-uri'
     require 'date'
-    csv_txt = File.read('lib/assets/2013Schedule.html')
-    data = CSV.parse csv_txt, :headers=>true
-    teams = []
-    data.each do |row|
-      row = row.to_hash.with_indifferent_access
-      home = Team.there? row['Home Team']
-      away = Team.there? row['Away Team']
-      year = 2013
-      month = row['Date'][0].to_i
-      day = row['Date'][1..2].to_i
-      date = Date.new(year, month, day)      
-      row['Neutral'] == 'N' ? venue = "Neutral" : venue = home.home_field
+    
+    current = Date.today
+    last = Date.new(2013,5,5)
+    
+    while current <= last
+      schedule_date = "#{current.month}/#{current.day}/#{current.year}"
+      scoreboard = "http://stats.ncaa.org/team/schedule_list?&sport_code=MLA&schedule_date=#{schedule_date}"
+      games = Nokogiri::HTML(open(scoreboard)).css('table.tblborder')
+      games.each do |game|
+        teams = game.css('a')
+        home = Team.find_by_name(teams[1].text)
+        away = Team.find_by_name(teams[0].text)
+        temp = Game.new :home_team => home.id, :away_team => away.id, :date => current
+        temp.save
+      end
       
-      game = Game.new :home_team => home.id, :away_team => away.id, :year => year,
-                  :date => date, :venue => venue 
-      
-      game.save
-      puts game.id
-    end            
+      current = current.next_day
+    end
+                
   end
   
   task :sumAll => :environment do
@@ -245,7 +246,7 @@ namespace :bg do
   
   task :quick => :environment do
     p = Parser.new
-    p.parse 1872622
+    p.parse 1867772
   end
   
   task :post => :environment do
