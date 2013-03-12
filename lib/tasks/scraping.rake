@@ -245,8 +245,9 @@ namespace :bg do
   end
   
   task :quick => :environment do
-    p = Parser.new
-    p.parse 1867772
+    a_pyth = 0.9
+    b_pyth = 0.1
+    puts (a_pyth - (b_pyth * a_pyth)) / (a_pyth + b_pyth - (2 * a_pyth * b_pyth))
   end
   
   task :post => :environment do

@@ -53,7 +53,7 @@ class Game < ActiveRecord::Base
       a_pyth = t[:away_as].pyth
       b_pyth = t[:home_as].pyth
     end
-    
+    puts "a_pyth: #{a_pyth}\nb_pyth: #{b_pyth}"
     (a_pyth - (b_pyth * a_pyth)) / (a_pyth + b_pyth - (2 * a_pyth * b_pyth))
     
   end
