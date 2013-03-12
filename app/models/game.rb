@@ -51,7 +51,7 @@ class Game < ActiveRecord::Base
       a_pyth = t[:away_as].pyth / 100
     else
       b_pyth = t[:away_as].pyth / 100
-      a_pyth = t[:home_as].pyty / 100
+      a_pyth = t[:home_as].pyth / 100
     end
     ((a_pyth - (b_pyth * a_pyth)) / (a_pyth + b_pyth - (2 * a_pyth * b_pyth)))
     
