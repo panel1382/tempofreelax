@@ -47,13 +47,13 @@ class Game < ActiveRecord::Base
     t = self.teams
     #(AWin% - (BWin% * AWin%)) / (AWin% + BWin% - (2 * AWin% * BWin%))
     if us == :home
-      b_pyth = t[:home_as].pyth / 100
-      a_pyth = t[:away_as].pyth / 100
-    else
-      b_pyth = t[:away_as].pyth / 100
       a_pyth = t[:home_as].pyth / 100
+      b_pyth = t[:away_as].pyth / 100
+    else
+      a_pyth = t[:away_as].pyth / 100
+      b_pyth = t[:home_as].pyth / 100
     end
-    ((a_pyth - (b_pyth * a_pyth)) / (a_pyth + b_pyth - (2 * a_pyth * b_pyth)))
+    ((a_pyth - (b_pyth * a_pyth)) / (a_pyth + b_pyth - (2 * a_pyth * b_pyth))) * 100
     
   end
   
