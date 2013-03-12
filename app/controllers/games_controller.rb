@@ -11,7 +11,7 @@ class GamesController < ApplicationController
       @date = Date.today
     end
     date = @date.to_s + '%'
-    @games = Game.where("date like ?", date)
+    @games = Game.where(:date => date)
     
     respond_to do |format|
       format.html # index.html.erb
