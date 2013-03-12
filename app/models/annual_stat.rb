@@ -355,7 +355,7 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
   end
   
   def pyth
-      (1 / (1 + (((adjusted_defensive_efficiency * opp_pos_percentage) / (adjusted_offensive_efficiency * pos_percentage))**@exponent))) * 100
+      (1 / (1 + (((adjusted_defensive_efficiency * opp_pos_percentage) / (adjusted_offensive_efficiency * pos_percentage))**3.1))) * 100
   end
   
   def assists_per_goal
