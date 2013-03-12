@@ -21,6 +21,7 @@ body{
   width:85%;
   margin: 0 auto;
   padding: 0 0 2em;
+  position:relative;
 }
 
 .content{
@@ -116,4 +117,15 @@ table{
 }
 .center{
   text-align:center;
+}
+.faq a:link, .faq a:visited{
+	background: $bg;
+	color: white;
+	position:absolute;
+	top:0;
+	right:1em;
+	font-size:1.8em;
+	line-height:2.2em;
+	font-weight:bold;
+	text-shadow: 0px -1px  black;
 }
