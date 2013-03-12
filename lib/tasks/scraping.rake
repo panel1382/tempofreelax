@@ -245,9 +245,8 @@ namespace :bg do
   end
   
   task :quick => :environment do
-    a_pyth = 0.9
-    b_pyth = 0.1
-    puts (a_pyth - (b_pyth * a_pyth)) / (a_pyth + b_pyth - (2 * a_pyth * b_pyth))
+    g=Game.find 1736
+    puts g.prediction :home
   end
   
   task :post => :environment do
