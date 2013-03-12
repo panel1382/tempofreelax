@@ -288,13 +288,15 @@
         meta = @game.css('table:nth-child(5) td:nth-child(2)')
         away = Team.find_or_create_by_name @game.css('.heading td')[0].text.gsub(/^ +/,'').gsub(/ +$/,'')
         home = Team.find_or_create_by_name @game.css('.heading td')[1].text.gsub(/^ +/,'').gsub(/ +$/,'')
+        meta[1].nil? ? venue = nil : venue = meta[1].text
+        meta[2].nil? ? attendance = nil : attendance = meta[2].text
         
         game_data = {
           :home_team => home.id,
           :away_team => away.id,
           :date => fixTime(meta[0].text),
-          :venue => meta[1].text,
-          :attendance => meta[2].text,
+          :venue => venue,
+          :attendance => attendance,
           :ncaa_id => gameID
         }
         
@@ -333,5 +335,4 @@
       Game.find_by_ncaa_id(gameID)
     end
   end
-
-end 
+end

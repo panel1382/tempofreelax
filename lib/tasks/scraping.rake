@@ -245,6 +245,8 @@ namespace :bg do
   end
   
   task :quick => :environment do
+    p = Parser.new
+    p.parse(1802094)
   end
   
   task :post => :environment do
