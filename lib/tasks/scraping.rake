@@ -245,7 +245,7 @@ namespace :bg do
   end
   
   task :quick => :environment do
-    g=Game.find 1736
+    g=Game.find 1419
     puts g.prediction :home
   end
   
