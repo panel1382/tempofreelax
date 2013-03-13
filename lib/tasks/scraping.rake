@@ -245,8 +245,9 @@ namespace :bg do
   end
   
   task :quick => :environment do
+    missing = [1680192,1674992,1873328,1852492,1880497,1873536]
     p = Parser.new
-    p.parse(1802094)
+    missing.each{ |id| p.parse(id) }
   end
   
   task :post => :environment do
