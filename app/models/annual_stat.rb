@@ -196,8 +196,10 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
       def_adj = 1.0
       off_adj = 1.0
     end
-    if !(off_adj.nan? or def_adj.nan? or opp_pyth.nan?)
-      update_attributes :off_adj => off_adj, :def_adj => def_adj, :opp_pyth => opp_pyth
+    if !(off_adj.nil? or def_adj.nil? or opp_pyth.nil?)
+      if !(off_adj.nan? or def_adj.nan? or opp_pyth.nan?)
+        update_attributes :off_adj => off_adj, :def_adj => def_adj, :opp_pyth => opp_pyth
+      end
     end
   end
   
