@@ -16,7 +16,6 @@
           %td= game.prediction :home
         -else
           %td= link_to "#{game.away.goals}-#{game.home.goals}", game
-        -end
         %td= link_to game.teams[:away].name, team_path(game.teams[:away], :year => game.date.year)
         %td= link_to game.teams[:home].name, team_path(game.teams[:home], :year => game.date.year)
         %td= game.venue
