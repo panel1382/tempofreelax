@@ -14,7 +14,7 @@ class PlayerAnnualStat < ActiveRecord::Base
     
     pgs = PlayerGameStat.joins(:player, :game).where('games.date' => range).select(:player_id).uniq
     pgs.each do |t|
-      if t.team_id != 65
+      if t.player.team_id != 65
         stat = PlayerAnnualStat.find_or_create_by_player_id_and_year(:player_id => t.player_id, :year => Date.new(year,1,1))
         stat.sum
         puts t.player_id
