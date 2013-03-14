@@ -1,3 +1,4 @@
+- years = [2010, 2011, 2012, 2013]
 !!!
 %html
   %head
@@ -15,6 +16,14 @@
           Tempo Free Lax &raquo;
           = yield( :title )
         %div.faq= link_to 'FAQ', 'http://www.greatlaxstate.com/tempo-free-lacrosse-faq'
+      %nav
+        %label Teams:
+        - years.each do |year|
+          = link_to year, "/overview/#{year}"
+        %label Games:
+        = link_to 'Today', 'calendar'
+        - years.each do |year|
+          = link_to year, "/calendar/#{year}-02-02"
       %div.content
         = yield
       %footer.center

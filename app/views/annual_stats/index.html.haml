@@ -1,11 +1,5 @@
 -title "#{@year} Ratings"
 
-%ul.nav
-  - @years.each do |year|
-    -if @year == year.year.year
-      %li= "[#{year.year.year}]"
-    -else
-      %li= link_to year.year.year, "/overview/#{year.year.year}"
 
 %table.sortable.persist-area
   %thead.persist-header   

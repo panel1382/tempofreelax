@@ -74,4 +74,8 @@ h1 a:hover{
 	}
 	tr td {text-align:center;}
 	tr td:nth-child(1){text-align:center;}
+	th{
+		text-align:left;
+		width: 50%;
+	}
 }

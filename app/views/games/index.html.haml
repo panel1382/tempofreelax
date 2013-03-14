@@ -2,8 +2,8 @@
 
 %table.calendar
   %tr.nav
-    %td{:colspan => 2, :class => 'left'}= link_to "&larr; #{@date.prev_day.to_s}".html_safe, :date => @date.prev_day
-    %td{:colspan => 2, :class => 'right'}= link_to "#{@date.next_day.to_s} &rarr;".html_safe, :date => @date.next_day
+    %th{:colspan => 2, :class => 'left'}= link_to "&larr; #{@date.prev_day.to_s}".html_safe, :date => @date.prev_day
+    %th{:colspan => 2, :class => 'right'}= link_to "#{@date.next_day.to_s} &rarr;".html_safe, :date => @date.next_day
   - if @games.length > 0
     %tr
       %th Score
@@ -23,8 +23,8 @@
     %tr 
       %td{:colspan=> 4, :class => 'empty'} No games scheduled for today
   %tr.nav
-    %td{:colspan => 2, :class => 'left'}= link_to "&larr; #{@date.prev_day.to_s}".html_safe, :date => @date.prev_day
-    %td{:colspan => 2, :class => 'right'}= link_to "#{@date.next_day.to_s} &rarr;".html_safe, :date => @date.next_day
+    %th{:colspan => 2, :class => 'left'}= link_to "&larr; #{@date.prev_day.to_s}".html_safe, :date => @date.prev_day
+    %th{:colspan => 2, :class => 'right'}= link_to "#{@date.next_day.to_s} &rarr;".html_safe, :date => @date.next_day
  
 %br
 
