@@ -1,7 +1,7 @@
 class AnnualStat < ActiveRecord::Base
   @@teams_2013 = 	[34,43,32,25,8,12,58,1,10,26,42,11,18,59,16,54,3,
     47,61,13,49,22,63,9,24,64,14,45,46,27,55,48,17,28,36,15,66,38,
-    30,4,60,50,33,56,6,40,53,19,29,2,57,21,51,23,41,65,35,31,52,20,44,5,7,37]
+    30,4,60,50,33,56,6,40,53,19,29,2,57,21,51,23,41,35,31,52,20,44,5,7,37]
   @exponent = 3.1
   
   belongs_to :team
@@ -14,9 +14,11 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
     finish = Date.new(year,12,31)
     
     @@teams_2013.each do |team_id|
-      stat = AnnualStat.where(:team_id => team_id, :year => start).first
-      stat = AnnualStat.new(:team_id => team_id, :year => start) if !stat.is_a?( AnnualStat )
-      stat.sum
+      if team_id != 65
+        stat = AnnualStat.where(:team_id => team_id, :year => start).first
+        stat = AnnualStat.new(:team_id => team_id, :year => start) if !stat.is_a?( AnnualStat )
+        stat.sum
+      end
     end
   end
   
