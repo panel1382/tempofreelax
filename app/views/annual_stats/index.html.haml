@@ -18,16 +18,17 @@
   
   %tbody  
     - @annual_stats.each do |a|
-      %tr
-        %td= link_to a.team.name, "/teams/#{a.team.id}/#{@year}"
-        %td= "#{a.wins}-#{a.losses}"
-        %td= stat_with_rank(:pyth, a, true)
-        %td= stat_with_rank(:adjusted_offensive_efficiency, a)
-        %td= stat_with_rank(:adjusted_defensive_efficiency, a)
-        %td= stat_with_rank(:opp_pyth, a, true)
-        %td= stat_with_rank(:pace, a)
-        %td= stat_with_rank(:pos_percentage, a, true)
-        %td= stat_with_rank(:faceoff_percentage, a, true)
-        %td= stat_with_rank(:offensive_clear_rate, a, true)
-        %td= stat_with_rank(:defensive_clear_rate, a, true)
+      - if !a.nil?
+        %tr
+          %td= link_to( a.team.name, "/teams/#{a.team.id}/#{@year}") if !a.team.nil?
+          %td= "#{a.wins}-#{a.losses}"
+          %td= stat_with_rank(:pyth, a, true)
+          %td= stat_with_rank(:adjusted_offensive_efficiency, a)
+          %td= stat_with_rank(:adjusted_defensive_efficiency, a)
+          %td= stat_with_rank(:opp_pyth, a, true)
+          %td= stat_with_rank(:pace, a)
+          %td= stat_with_rank(:pos_percentage, a, true)
+          %td= stat_with_rank(:faceoff_percentage, a, true)
+          %td= stat_with_rank(:offensive_clear_rate, a, true)
+          %td= stat_with_rank(:defensive_clear_rate, a, true)
       

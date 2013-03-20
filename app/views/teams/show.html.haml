@@ -24,49 +24,49 @@
   %tbody
     %tr
       %td Adj. Efficiency
-      %td= @annual_stat.adjusted_offensive_efficiency.round 2
-      %td= @annual_stat.adjusted_defensive_efficiency.round 2
+      %td= stat_with_rank(:adjusted_offensive_efficiency, @annual_stat)
+      %td= stat_with_rank(:adjusted_defensive_efficiency, @annual_stat)
     %tr
       %th{:colspan=>3} Possession and Pace
     %tr
       %td Pos/Game
-      %td{:colspan=>2}= (@annual_stat.ppg + @annual_stat.oppg).round 2
+      %td{:colspan=>2}= stat_with_rank(:pace, @annual_stat)
     %tr
       %td FO%
-      %td{:colspan=>2}= "#{@annual_stat.faceoff_percentage.round(2)}%"
+      %td{:colspan=>2}= stat_with_rank(:faceoff_percentage, @annual_stat, true)
     %tr
       %td Clearing
-      %td{:colspan=>2}= "#{@annual_stat.offensive_clear_rate.round(2)}%"
+      %td{:colspan=>2}= stat_with_rank(:offensive_clear_rate, @annual_stat, true)
     %tr
       %td Pos/Game
-      %td= @annual_stat.ppg.round 4
-      %td= @annual_stat.oppg.round 4
+      %td= stat_with_rank(:ppg, @annual_stat, false, 4)
+      %td= stat_with_rank(:oppg, @annual_stat, false, 4)
     %tr
       %td Pos%
-      %td= "#{@annual_stat.pos_percentage.round(2)}%"
-      %td= "#{@annual_stat.opp_pos_percentage.round(2)}%"
+      %td= stat_with_rank(:pos_percentage, @annual_stat, true)
+      %td= stat_with_rank(:opp_pos_percentage, @annual_stat, true)
     %tr
       %th{:colspan=>3} Shooting &amp; Scoring
     %tr
       %td Shots/Pos
-      %td= @annual_stat.shots_per_possession.round 4
-      %td= @annual_stat.opp_shots_per_possession.round 4
+      %td= stat_with_rank(:shots_per_possession, @annual_stat, true)
+      %td= stat_with_rank(:opp_shots_per_possession, @annual_stat, true)
     %tr
       %td Shooting%
-      %td= "#{@annual_stat.shooting_percentage.round 2}%"
-      %td= "#{@annual_stat.opp_shooting_percentage.round 2}%"
+      %td= stat_with_rank(:shooting_percentage, @annual_stat, true)
+      %td= stat_with_rank(:opp_shooting_percentage, @annual_stat, true)
     %tr
       %td eShooting%
-      %td= "#{@annual_stat.effective_shooting_percentage.round 2}%"
-      %td= "#{@annual_stat.opp_effective_shooting_percentage.round 2}%"
+      %td= stat_with_rank(:effective_shooting_percentage, @annual_stat, true)
+      %td= stat_with_rank(:opp_effective_shooting_percentage, @annual_stat, true)
     %tr
       %td Assists/Goal
-      %td= @annual_stat.assists_per_goal.round 4
-      %td= @annual_stat.opp_assists_per_goal.round 4
+      %td= stat_with_rank(:assists_per_goal, @annual_stat, false, 4)
+      %td= stat_with_rank(:opp_assists_per_goal, @annual_stat, false, 4)
     %tr
       %td TO/Pos
-      %td= @annual_stat.turnovers_per_possession.round 4
-      %td= @annual_stat.opp_turnovers_per_possession.round 4
+      %td= stat_with_rank(:turnovers_per_possession, @annual_stat, false, 4)
+      %td= stat_with_rank(:opp_turnovers_per_possession, @annual_stat, false, 4)
     %tr
       %th{:colspan=>3} Extra Man Opportunities
     %tr
@@ -75,24 +75,24 @@
       %th.right Man Down
     %tr
       %td EMO/Pos
-      %td= @annual_stat.extra_man_per_possession.round 4
-      %td= @annual_stat.opp_extra_man_per_possession.round 4
+      %td= stat_with_rank(:extra_man_per_possession, @annual_stat, false, 4)
+      %td= stat_with_rank(:opp_extra_man_per_possession, @annual_stat, false, 4)
     %tr
       %td EMO Conversion
-      %td= "#{@annual_stat.extra_man_conversion.round 2}%"
-      %td= "#{@annual_stat.man_down_defense.round 2}%"
+      %td= stat_with_rank(:extra_man_conversion, @annual_stat, true)
+      %td= stat_with_rank(:man_down_defense, @annual_stat, true)
     %tr
       %td EMO Reliance
-      %td= "#{@annual_stat.emo_reliance.round 2}%"
-      %td= "#{@annual_stat.opp_emo_reliance.round 2}%"
+      %td= stat_with_rank(:emo_reliance, @annual_stat, true)
+      %td= stat_with_rank(:opp_emo_reliance, @annual_stat, true)
     %tr
       %th{:colspan=>3} Goalie Things
     %tr
       %td Save%
-      %td{:colspan=>2}= "#{@annual_stat.save_percentage.round 2}%"
+      %td{:colspan=>2}= stat_with_rank(:save_percentage, @annual_stat, true)
     %tr
       %td Saves/Pos
-      %td{:colspan=>2}= @annual_stat.saves_per_possession.round 4
+      %td{:colspan=>2}= stat_with_rank(:saves_per_possession, @annual_stat, false, 4)
       
       
 

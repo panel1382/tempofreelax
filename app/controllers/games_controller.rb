@@ -30,7 +30,7 @@ class GamesController < ApplicationController
     @next = Game.find(params[:id].to_i + 1)
     
     respond_to do |format|
-      format.html # show.html.erb
+      format.html { @game.ncaa_id.nil? ? render('preview') : render('show') }
       format.json { render json: @game }
     end
   end

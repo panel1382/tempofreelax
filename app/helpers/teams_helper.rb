@@ -23,7 +23,7 @@ module TeamsHelper
     us == :home ? them = :away : them = :home
     output = ''
     if game.game_stats.length == 0
-      output = "#{game.prediction(us).round(2).to_s}%"
+      output = link_to "#{game.prediction(us).round(2).to_s}%", game
     else
       if game.is_a? Game
         puts game.goals(them)
@@ -32,5 +32,4 @@ module TeamsHelper
       end
     end
   end
-  
 end

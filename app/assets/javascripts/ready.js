@@ -37,7 +37,6 @@ function formatText(){
 		$(this).siblings().each(function(){
 			
 			var text = $(this).text()
-			console.log(text)
 			if (text.indexOf){
 				if ( text.indexOf('%') === -1){
 					$(this).text( $(this).text() + ' %' )

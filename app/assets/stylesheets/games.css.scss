@@ -14,7 +14,7 @@ h1 a:hover{
 
 .box_score{
 	width:85%;
-	margin: auto auto;
+	margin: auto auto 1.5em auto;
 	
 	tr.heading td{
 		font-weight:600;
@@ -45,6 +45,18 @@ h1 a:hover{
 	.loser{
 		background:#daa;
 	}
+	
+}
+.preview{
+	width:60%;
+	
+	td:first-child{
+		width:20%;
+	};
+	.schedule td:nth-child(1){
+		text-align:left;
+		font-weight:normal;
+	};
 }
 
 .calendar{

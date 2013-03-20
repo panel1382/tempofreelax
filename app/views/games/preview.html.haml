@@ -8,163 +8,114 @@
 %h3
   = @game.date.strftime "%a. %b. %-d, %Y"
 
-%table.box_score
+%table.preview.box_score
   %tr.schedule
     %td{:colspan => 2}= link_to "&larr; #{@prev.teams[:away].name} at #{@prev.teams[:home].name} ".html_safe, @prev
-    %td
-    %td{:colspan => 2}= link_to " #{@next.teams[:away].name} at #{@next.teams[:home].name} &rarr;".html_safe, @next
+    %td= link_to " #{@next.teams[:away].name} at #{@next.teams[:home].name} &rarr;".html_safe, @next
   %tr
     %th
-    %th{:colspan => 2}= "#{@game.teams[:home].name} (Home)"
-    %th{:colspan => 2}= "#{@game.teams[:away].name} (Away)"
-  %tr.heading
-    %td 
-    %td Season Avg
-    %td{:colspan=>2, :class=>'center'} Game
-    %td Season Avg
+    %th= "#{@game.teams[:home].name} (Home)"
+    %th= "#{@game.teams[:away].name} (Away)"
   %tr.descending
     %td Goals
     %td= stat_with_rank :goals_per_game, @home
-    %td= @game.home.goals
-    %td= @game.away.goals
     %td= stat_with_rank :goals_per_game, @away
   %tr.skip
     %td  Pace
     %td= stat_with_rank :pace, @home
-    %td= @game.possessions(:home)
-    %td= @game.possessions(:away)
     %td= stat_with_rank :pace, @away
   %tr.descending
     %td  Off Eff
     %td= stat_with_rank :adjusted_offensive_efficiency, @home
-    %td= @game.offensive_efficiency :home
-    %td= @game.offensive_efficiency :away
     %td= stat_with_rank :adjusted_offensive_efficiency, @away
   %tr.ascending
     %td  Def Eff
     %td= stat_with_rank :adjusted_defensive_efficiency, @home
-    %td= @game.offensive_efficiency :away
-    %td= @game.offensive_efficiency :home
     %td= stat_with_rank :adjusted_defensive_efficiency, @away
   %tr
-    %th{:colspan => 5} Possessions and Pace
+    %th{:colspan => 3} Possessions and Pace
   %tr.descending
     %td Faceoff %
     %td= stat_with_rank :faceoff_percentage, @home, true
-    %td= @game.faceoff_percentage :home
-    %td= @game.faceoff_percentage :away
     %td= stat_with_rank :faceoff_percentage, @away, true
   %tr.descending
     %td Clearing %
     %td= stat_with_rank :offensive_clear_rate, @home, true
-    %td= @game.offensive_clear_rate :home
-    %td= @game.offensive_clear_rate :away
     %td= stat_with_rank :offensive_clear_rate, @away, true
   %tr.descending
     %td Riding %
     %td= stat_with_rank :defensive_clear_rate, @home, true
-    %td= 100 - @game.offensive_clear_rate( :away )
-    %td= 100 - @game.offensive_clear_rate( :home )
     %td= stat_with_rank :defensive_clear_rate, @away, true
   %tr.descending
     %td Poss %
     %td= stat_with_rank :pos_percentage, @home, true
-    %td= @game.pos_percentage( :home )
-    %td= @game.pos_percentage( :away )
     %td= stat_with_rank :pos_percentage, @away, true
   %tr
-    %th{:colspan => 5} Shooting Stats
+    %th{:colspan => 3} Shooting Stats
   %tr.descending
     %td Shots/Pos
     %td= stat_with_rank :shots_per_possession, @home, false, 4
-    %td= @game.shots_per_possession :home
-    %td= @game.shots_per_possession :away
     %td= stat_with_rank :shots_per_possession, @away, false, 4
   %tr.descending
     %td Shooting %
     %td= stat_with_rank :shooting_percentage, @home, true
-    %td= @game.home.shooting_percentage
-    %td= @game.away.shooting_percentage
     %td= stat_with_rank :shooting_percentage, @away, true
   %tr.descending
     %td eShooting %
     %td= stat_with_rank :effective_shooting_percentage, @home, true
-    %td= @game.home.effective_shooting_percentage
-    %td= @game.away.effective_shooting_percentage
     %td= stat_with_rank :effective_shooting_percentage, @away, true
   %tr.descending
     %td Assists/Pos
     %td= stat_with_rank :assists_per_possession, @home, false, 4
-    %td= @game.assists_per_possession :home
-    %td= @game.assists_per_possession :away
     %td= stat_with_rank :assists_per_possession, @away, false, 4
   %tr.ascending
     %td Turnovers/Pos
     %td= stat_with_rank :turnovers_per_possession, @home, false, 4
-    %td= @game.turnovers_per_possession :home
-    %td= @game.turnovers_per_possession :away
     %td= stat_with_rank :turnovers_per_possession, @away, false, 4
   %tr
-    %th{:colspan => 5} Extra Man Stats
-  %tr
+    %th{:colspan => 3} Extra Man Stats
+  %tr.heading
     %td
-    %td{:colspan => 2} Man Up
-    %td{:colspan => 2} Man Down
+    %td Man Up
+    %td Man Down
   %tr.skip
     %td EMO / Pos
     %td= stat_with_rank :extra_man_per_possession, @home, false, 4
-    %td= @game.extra_man_per_possession :home
-    %td= @game.man_down_per_possession :away
     %td= stat_with_rank :opp_extra_man_per_possession, @away, false, 4
   %tr.skip
     %td EMO %
     %td= stat_with_rank :extra_man_conversion, @home, true
-    %td= @game.home.extra_man_conversion
-    %td= @game.man_down_conversion :away
     %td= stat_with_rank :man_down_conversion, @away, true
   %tr.skip
     %td EMO Reliance %
     %td= stat_with_rank :emo_reliance, @home, true
-    %td= @game.home.emo_reliance
-    %td= @game.away.man_down_reliance
     %td=stat_with_rank :man_down_reliance, @away, true
-  %tr
+  %tr.heading
     %td
-    %td{:colspan => 2} Man Down
-    %td{:colspan => 2} Man Up
+    %td Man Down
+    %td Man Up
   %tr.skip
     %td EMO / Pos
     %td= stat_with_rank :opp_extra_man_per_possession, @home, false, 4
-    %td= @game.man_down_per_possession :home
-    %td= @game.extra_man_per_possession :away
     %td= stat_with_rank :extra_man_per_possession, @away, false, 4
   %tr.skip
     %td EMO %
     %td= stat_with_rank :man_down_conversion, @home, true
-    %td= @game.man_down_conversion :home
-    %td= @game.away.extra_man_conversion
     %td= stat_with_rank :extra_man_conversion, @away, true
   %tr.skip
     %td EMO Reliance %
     %td= stat_with_rank :man_down_reliance, @home, true
-    %td= @game.home.man_down_reliance
-    %td= @game.away.emo_reliance
     %td= stat_with_rank :emo_reliance, @away, true
   %tr
-    %th{:colspan => 5} Goalies
+    %th{:colspan => 3} Goalies
   %tr.descending
     %td Save %
     %td= stat_with_rank :save_percentage, @home, true
-    %td= @game.save_percentage :home
-    %td= @game.save_percentage :away
     %td= stat_with_rank :save_percentage, @away, true
   %tr.ascending.bottom
     %td Save / Def Pos
     %td= stat_with_rank :saves_per_possession, @home, false, 4
-    %td= @game.saves_per_possession :home
-    %td= @game.saves_per_possession :away
     %td= stat_with_rank :saves_per_possession, @away, false, 4
   %tr.schedule
     %td{:colspan => 2}= link_to "&larr; #{@prev.teams[:away].name} at #{@prev.teams[:home].name} ".html_safe, @prev
-    %td
-    %td{:colspan => 2}= link_to " #{@next.teams[:away].name} at #{@next.teams[:home].name} &rarr;".html_safe, @next
+    %td= link_to " #{@next.teams[:away].name} at #{@next.teams[:home].name} &rarr;".html_safe, @next

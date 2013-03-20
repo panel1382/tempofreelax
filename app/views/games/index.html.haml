@@ -13,7 +13,7 @@
     - @games.each do |game|
       %tr
         - if game.ncaa_id.nil?
-          %td= game.prediction :home
+          %td= link_to "#{game.prediction(:home)} chance #{game.teams[:home].name} wins", game
         -else
           %td= link_to "#{game.away.goals}-#{game.home.goals}", game
         %td= link_to game.teams[:away].name, team_path(game.teams[:away], :year => game.date.year)
