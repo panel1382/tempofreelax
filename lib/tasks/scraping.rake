@@ -10,7 +10,7 @@ namespace :bg do
     year = Date.today.year
     
     # set up to check for entire 2013 season
-    start_date = Date.new 2013, 2, 2
+    start_date = Date.new 2013, 3, 12
     target_date = Date.new(Time.now.year, Time.now.month, Time.now.day).prev_day
     range = start_date..target_date
     games = []
