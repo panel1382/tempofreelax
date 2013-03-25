@@ -126,9 +126,10 @@
 %table.attack
   %thead
     %tr
-      %th{:colspan => 8} Attack
+      %th{:colspan => 9} Attack
     %tr
       %th Name
+      %th PRI
       %th Goals/Pos
       %th Assits/Pos
       %th Shots/Pos
@@ -141,6 +142,7 @@
       -if player.active?
         %tr
           %td= "#{player.player.first_name} #{player.player.last_name}"
+          %td= player.pri_attack
           %td= player.goals_per_possession.round 4
           %td= player.assists_per_possession.round 4
           %td= player.shots_per_possession.round 4
@@ -152,9 +154,10 @@
 %table.defense
   %thead
     %tr
-      %th{:colspan => 8} Defense
+      %th{:colspan => 9} Defense
     %tr
       %th Name
+      %th PRI
       %th Goals/Pos
       %th Assits/Pos
       %th Shots/Pos
@@ -167,6 +170,7 @@
       -if player.active?
         %tr
           %td= "#{player.player.first_name} #{player.player.last_name}"
+          %td= player.pri_defense
           %td= player.goals_per_possession.round 4
           %td= player.assists_per_possession.round 4
           %td= player.shots_per_possession.round 4
@@ -178,9 +182,10 @@
 %table.goalies
   %thead
     %tr
-      %th{:colspan => 5} Goalies
+      %th{:colspan => 6} Goalies
     %tr
       %th Name
+      %th PRI
       %th Save%
       %th GA
       %th Minutes
@@ -189,6 +194,7 @@
     - @roster[:goalies].each do |player|
       %tr
         %td= "#{player.player.first_name} #{player.player.last_name}"
+        %td= player.pri_goalie
         %td= "#{player.save_percentage.round(2)}%"
         %td= player.goals_allowed
         %td= player.goalie_minutes

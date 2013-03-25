@@ -17,6 +17,10 @@
     %th= "#{@game.teams[:home].name} (Home)"
     %th= "#{@game.teams[:away].name} (Away)"
   %tr.descending
+    %td Predicted Win%
+    %td= "#{@game.prediction(:home).round(2)}%"
+    %td= "#{@game.prediction(:away).round(2)}%"
+  %tr.descending
     %td Goals
     %td= stat_with_rank :goals_per_game, @home
     %td= stat_with_rank :goals_per_game, @away

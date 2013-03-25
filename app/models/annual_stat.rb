@@ -214,11 +214,34 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
   end
   
   def opponent_stats
-    opp = []
-    g = game_list
-    g[:home].each {|game| opp.push AnnualStat.where(:team_id => game.away_team, :year => year).first} 
-    g[:away].each {|game| opp.push AnnualStat.where(:team_id => game.home_team, :year => year).first}
-    opp
+      if @opponent_stats.nil?
+        opp = []
+        g = game_list
+        g[:home].each {|game| opp.push AnnualStat.where(:team_id => game.away_team, :year => year).first} 
+        g[:away].each {|game| opp.push AnnualStat.where(:team_id => game.home_team, :year => year).first}
+        @opponent_stats = opp
+      else
+        @opponent_stats
+      end
+  end
+  
+  def opponent_averages
+    if @opponents_avg.nil?
+      sum = AnnualStat.initHash
+      avg = sum
+      @opponent_stats ||= opponent_stats
+      n =  @opponent_stats.length
+      puts @opponent_stats[0].inspect
+      @opponent_stats.each do |team| 
+        sum.each do |key,val|
+          sum[key] += team.send key
+        end
+      end
+      sum.each { |stat, val| avg[stat] = (val.to_f)/n }
+      @opponents_avg = avg
+    else
+      @opponents_avg
+    end
   end
   
   #various stats
@@ -228,6 +251,18 @@ attr_accessible :assists, :clear_attempts, :clear_success, :conference_id, :def_
   
   def goals_per_game
     goals.to_f / games
+  end
+  
+  def opp_goals_per_game
+    opp_goals.to_f / games
+  end
+  
+  def opp_avg_goals_against_per_game
+    (opponent_averages[:goals] / opponent_averages[:games])
+  end
+  
+  def opp_avg_goals_per_game
+    opponent_averages[:goals] / games
   end
   
   def possessions

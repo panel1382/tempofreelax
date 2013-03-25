@@ -245,14 +245,18 @@ namespace :bg do
   end
   
   task :quick => :environment do
-    missing = ['1923333','1919462','1935053']
+    missing = ['1959753','1942060','1942453']
     p = Parser.new
     missing.each{ |id| p.parse(id) }
   end
   
   task :post => :environment do
-    s3 = Datastore.new
-    thing=s3.bucket.objects.find('2013-03-08_games.csv').content
-    puts thing
+    a = PlayerAnnualStat.find(6943)
+    puts a.guess_position
+    puts "Attack: #{a.pri_attack}"
+    puts "Midfield: #{a.pri_midfield}"
+    puts "Defense: #{a.pri_defense}"
+    puts "Goalie: #{a.pri_goalie}"
+    puts a.position
   end
 end

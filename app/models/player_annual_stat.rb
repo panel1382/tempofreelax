@@ -4,10 +4,16 @@ class PlayerAnnualStat < ActiveRecord::Base
   
   belongs_to :player
   belongs_to :team
+  has_many :player_game_stats
   
   @@defender_ratio = 3
   @@goalie_threshold = 600
   @@faceoff_threshold = 20
+  @@pri_attack_constants = [1.0,0.8,1.0,0.2]
+  @@pri_midfield_constants = [1.5,0.9,0.7,0.2,0.05]
+  @@pri_defense_constants = [2.0,1.3,1.0,0.5,0.05]
+  @@pri_goalie_constants = [4.0,2.5,0.5,0.5,1.5]
+  
   
   def self.sumAll(year)
     range = Date.new(year,1,1)..Date.new(year,12,31)
@@ -26,6 +32,19 @@ class PlayerAnnualStat < ActiveRecord::Base
     end
   end
   
+  def games
+    if @games.nil?
+      pgs = PlayerGameStat.joins(:player, :game).where('games.date' => Date.new(year.year,1,1)..Date.new(year.year,12,31), :player_id => player_id).select(:player_id)
+      @games = pgs.length
+    else
+      @games
+    end
+  end
+  
+  def team_stats
+    team.annual_stat_by_year year.year
+  end
+  
   def keys_for_sum
     [:assists, :caused_turnovers, :extra_man_goals, :faceoffs_won, :faceoffs_taken, 
     :goalie_seconds, :goals, :goals_allowed, :ground_balls, :losses, :man_down_goals, 
@@ -40,15 +59,32 @@ class PlayerAnnualStat < ActiveRecord::Base
   end
   
   def guess_position
-    if goalie_seconds > @@goalie_threshold
-      self.position = "Goalie"
-    elsif (ground_balls.to_f / shot_attempts) > @@defender_ratio
-      self.position = "Defense"
-    else
+#    if goalie_seconds > @@goalie_threshold
+#      self.position = "Goalie"
+#    elsif (ground_balls.to_f / shot_attempts) > @@defender_ratio
+#      self.position = "Defense"
+#    else
+#      self.position = "Attack"
+#    end
+    #pri guessing
+    pris = [pri_attack, pri_midfield, pri_defense, pri_goalie]
+    thing = pris.sort.reverse!
+
+    case thing[0]
+    when pri_attack
       self.position = "Attack"
+    when pri_midfield
+      self.position = "Midfield"
+    when pri_defense
+      self.position = "Defense"
+    when pri_goalie
+      self.position = "Goalie"
+    else
+      self.position = "uhhhhhhhhhh"
     end
-    
     faceoffs_taken > @@faceoff_threshold ? self.faceoff_specialist = true : self.faceoff_specialist = false 
+    save
+    position
   end
   
   def sum
@@ -152,4 +188,79 @@ class PlayerAnnualStat < ActiveRecord::Base
     turnovers.to_f / faceoffs_taken.to_i
   end
   
+  def shots_saved
+    shots_on_goal - goals
+  end
+  
+  #strength of schedule for pri
+  def pri_sos
+    team_stats.opp_pyth  / 50.0 
+  end
+  
+  def pri_sog_percentage
+    shots_saved.to_f / shot_attempts 
+  end
+  
+  #for pri: goals/shots on goal
+  def pri_goal_percentage
+    shots_on_goal > 0 ? goals.to_f / shots_on_goal : 1.0
+  end
+  
+  #for pri: team's average goals scored  per game / opponent's average goals allowed per game;
+  def pri_toff
+    team_stats.goals_per_game / team_stats.opp_avg_goals_per_game
+  end
+  
+  #for pri: team's average goals allowed per game / opponent's average  goals scored per game;
+  def pri_tdef
+    team_stats.opp_goals_per_game / team_stats.opp_avg_goals_against_per_game
+  end
+  
+  #for pri: team's clear percentage;
+  def pri_tclear
+    team_stats.offensive_clear_rate
+  end
+  
+  def pri_attack
+    (((goals*@@pri_attack_constants[0]*((pri_goal_percentage+pri_sog_percentage)/2)*(pri_toff)*pri_sos) / games) +
+    ((assists*@@pri_attack_constants[1]*pri_toff*pri_sos) / games )  +
+    ((ground_balls*@@pri_attack_constants[2]*pri_toff*pri_sos) / games) +
+    (((5*caused_turnovers - turnovers)*@@pri_attack_constants[3]*pri_toff*pri_sos) / games)).round 3
+    
+  end
+  
+  def pri_midfield
+    a = ((goals*@@pri_midfield_constants[0]*pri_goal_percentage*((pri_toff+pri_tdef)/2)*pri_sos) / games) +
+    ((assists*@@pri_midfield_constants[1]*((pri_toff+pri_tdef)/2)*pri_sos) / games )  +
+    ((ground_balls*@@pri_midfield_constants[2]*((pri_toff+pri_tdef)/2)*pri_sos) / games) +
+    (((5*caused_turnovers - turnovers)*@@pri_midfield_constants[3]*((pri_toff+pri_tdef)/2)*pri_sos) / games)
+    a += ((faceoffs_won * @@pri_midfield_constants[4] * (faceoffs_won / faceoffs_taken)*((pri_toff+pri_tdef)/2)*pri_sos) / games) if faceoffs_taken > 0
+    a.round 3
+  end
+  
+  def pri_defense
+    if games > 0
+      a = ((goals*@@pri_defense_constants[0]*pri_goal_percentage*(pri_toff)*pri_sos) / games) +
+      ((assists*@@pri_defense_constants[1]*pri_toff*pri_sos) / games )  +
+      ((ground_balls*@@pri_defense_constants[2]*pri_toff*pri_sos) / games) +
+      (((5*caused_turnovers - turnovers)*@@pri_defense_constants[3]*pri_toff*pri_sos) / games)
+      a += ((faceoffs_won * @@pri_defense_constants[4] * (faceoffs_won / faceoffs_taken)*pri_tdef*pri_sos) / games) if faceoffs_taken > 0
+      a.round 3
+    else
+      "no games!!!!"
+    end
+  end
+  
+  def pri_goalie
+    if goalie_seconds > 0
+      a = ((goals*@@pri_goalie_constants[0]*pri_goal_percentage*(pri_toff)*pri_sos) / games) +
+      ((assists*@@pri_goalie_constants[1]*pri_toff*pri_sos) / games )  +
+      ((ground_balls*@@pri_goalie_constants[2]*pri_toff*pri_sos) / games) +
+      (((5*caused_turnovers - turnovers)*@@pri_goalie_constants[3]*pri_toff*pri_sos) / games) +
+      ((saves * @@pri_goalie_constants[4] * pri_tdef*pri_sos) / games)
+      a.round 3
+    else
+      0.0
+    end
+  end
 end
