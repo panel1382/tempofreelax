@@ -251,7 +251,8 @@ namespace :bg do
   end
   
   task :post => :environment do
-    a = PlayerAnnualStat.find(6943)
+    a = PlayerAnnualStat.find(7096)
+    a.sum
     puts a.guess_position
     puts "Attack: #{a.pri_attack}"
     puts "Midfield: #{a.pri_midfield}"
