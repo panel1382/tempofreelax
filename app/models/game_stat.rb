@@ -1,5 +1,6 @@
 class GameStat < ActiveRecord::Base
   belongs_to :game
+  belongs_to :team
   attr_accessible :assists, :clear_attempts, :clear_success, :extra_man_goals, :extra_man_opportunities, :faceoff_percentage, :faceoffs_won, :game_id, :goals, :home, :man_down_goals, :penalties, :shot_attempts, :shots_on_goal, :team_id, :ground_balls, :turnovers, :caused_turnovers, :penalty_time, :saves, :faceoffs_taken
 
   

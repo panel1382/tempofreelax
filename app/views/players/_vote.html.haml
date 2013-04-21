@@ -1,0 +1,14 @@
+-@vote = Vote.new
+= form_for @vote, remote: true, format: :json do |f|
+  - if @vote.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@player.errors.count, "error")} prohibited this player from being saved:"
+      %ul
+        - @vote.errors.full_messages.each do |msg|
+          %li= msg
+
+  .vote
+    = select( 'vote', 'position_id', Position.all.collect { |p| [p.name, p.id] }, { :include_blank => true } )
+    = f.hidden_field :player_id, { :value => player.id }
+  .hide
+    = f.submit 'Save'

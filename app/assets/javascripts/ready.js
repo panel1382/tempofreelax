@@ -17,9 +17,16 @@ $(document).ready(function(){
 
    formatText();
    boxScore_HeadToHead();
-   
    sortTable();
    $(window).scroll(UpdateTableHeaders).trigger("scroll");
+
+   // Defined in teams.js
+   voteListeners();
+	$("form[data-remote]")
+		.bind('ajax:before', function(){console.log('before')})
+	    .bind('ajax:complete', function(){console.log('done')})
+		.bind('ajax:success', function(){$(this).parents('td').addClass('success')})
+		
 });
 
 function formatText(){

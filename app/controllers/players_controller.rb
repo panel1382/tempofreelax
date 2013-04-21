@@ -81,4 +81,18 @@ class PlayersController < ApplicationController
       format.json { head :no_content }
     end
   end
+  
+  def vote
+    @vote = Vote.new(params[:vote]) if !params[:vote][:position_id].nil?
+    puts params[:vote][:position_id].nil?
+    respond_to do |format|
+      if @vote.save
+        format.html { redirect_to @vote, notice: 'Vote was successfully created.' }
+        format.json { render json: @vote, status: :created, location: @vote }
+      else
+        format.html { render action: "new" }
+        format.json { render json: @vote.errors, status: :unprocessable_entity }
+      end
+    end
+  end
 end

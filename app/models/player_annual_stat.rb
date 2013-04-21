@@ -68,6 +68,7 @@ class PlayerAnnualStat < ActiveRecord::Base
 #    end
     #pri guessing
     pris = [pri_attack, pri_midfield, pri_defense, pri_goalie]
+    puts pris.inspect
     thing = pris.sort.reverse!
 
     case thing[0]
@@ -222,11 +223,13 @@ class PlayerAnnualStat < ActiveRecord::Base
   end
   
   def pri_attack
-    (((goals*@@pri_attack_constants[0]*((pri_goal_percentage+pri_sog_percentage)/2)*(pri_toff)*pri_sos) / games) +
+    a = (((goals*@@pri_attack_constants[0]*((pri_goal_percentage+pri_sog_percentage)/2)*(pri_toff)*pri_sos) / games) +
     ((assists*@@pri_attack_constants[1]*pri_toff*pri_sos) / games )  +
     ((ground_balls*@@pri_attack_constants[2]*pri_toff*pri_sos) / games) +
     (((5*caused_turnovers - turnovers)*@@pri_attack_constants[3]*pri_toff*pri_sos) / games)).round 3
     
+    a = 0.0 if a.nan?
+    a
   end
   
   def pri_midfield

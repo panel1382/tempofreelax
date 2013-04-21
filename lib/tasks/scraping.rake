@@ -245,7 +245,7 @@ namespace :bg do
   end
   
   task :quick => :environment do
-    missing = ['1959753','1942060','1942453']
+    missing = ['1964713']
     p = Parser.new
     missing.each{ |id| p.parse(id) }
   end

@@ -94,4 +94,11 @@ class GamesController < ApplicationController
       format.json { head :no_content }
     end
   end
+  
+  def audit
+    require 'date'
+    @year = params[:year].to_i
+    range = (Date.new(@year,1,1))..(Date.new(@year,12,31))
+    @games = Game.where :date => range
+  end
 end

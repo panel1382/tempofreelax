@@ -1,0 +1,21 @@
+%ul
+- @games.each do |game|
+  - if game.game_stats.length > 2
+    %li
+      = link_to "#{game.date}: #{game.teams[:away].name} at #{game.teams[:home].name}", "http://stats.ncaa.org/game/index/#{game.ncaa_id}"
+      %table
+        %tr
+          %th Team
+          %th Goals
+          %th SOG
+          %th GB
+          %th FO Taken
+          %th Action
+        -game.game_stats.each do |stat|
+          %tr
+            %td= "#{stat.team.name}"
+            %td= stat.goals
+            %td= stat.shots_on_goal
+            %td= stat.ground_balls
+            %td= stat.faceoffs_taken
+            %td= link_to "Delete", stat, :confirm => "You Sure?", :method => :delete

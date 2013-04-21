@@ -2,6 +2,7 @@ class Team < ActiveRecord::Base
   has_many :annual_stats
   has_many :national_ranks
   has_many :games
+  has_many :game_stats
   has_many :players
   has_many :player_annual_stats
   belongs_to :conference

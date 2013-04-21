@@ -126,7 +126,7 @@
 %table.attack
   %thead
     %tr
-      %th{:colspan => 9} Attack
+      %th{:colspan => 10} Attack
     %tr
       %th Name
       %th PRI
@@ -137,12 +137,13 @@
       %th TO/Pos
       %th GB/Pos
       %th CT/Pos
+      %th Pos?
   %tbody
     - @roster[:attack].each do |player|
       -if player.active?
         %tr
           %td= "#{player.player.first_name} #{player.player.last_name}"
-          %td= player.pri_attack
+          %td= "#{player.pri_attack} (#{player.pri_midfield})"
           %td= player.goals_per_possession.round 4
           %td= player.assists_per_possession.round 4
           %td= player.shots_per_possession.round 4
@@ -150,11 +151,12 @@
           %td= player.turnovers_per_possession.round 4
           %td= player.ground_balls_per_possession.round 4
           %td= player.caused_turnovers_per_possession.round 4
+          %td= render "players/vote", :player => player
         
 %table.defense
   %thead
     %tr
-      %th{:colspan => 9} Defense
+      %th{:colspan => 10} Defense
     %tr
       %th Name
       %th PRI
@@ -165,12 +167,13 @@
       %th TO/Pos
       %th GB/Pos
       %th CT/Pos
+      %th Pos?
   %tbody
     - @roster[:defense].each do |player|
       -if player.active?
         %tr
           %td= "#{player.player.first_name} #{player.player.last_name}"
-          %td= player.pri_defense
+          %td= "#{player.pri_defense} (#{player.pri_midfield})"
           %td= player.goals_per_possession.round 4
           %td= player.assists_per_possession.round 4
           %td= player.shots_per_possession.round 4
@@ -178,11 +181,12 @@
           %td= player.turnovers_per_possession.round 4
           %td= player.ground_balls_per_possession.round 4
           %td= player.caused_turnovers_per_possession.round 4
+          %td= render "players/vote", :player => player
         
 %table.goalies
   %thead
     %tr
-      %th{:colspan => 6} Goalies
+      %th{:colspan => 7} Goalies
     %tr
       %th Name
       %th PRI
@@ -190,6 +194,7 @@
       %th GA
       %th Minutes
       %th GA/Pos
+      %th Pos?
   %tbody
     - @roster[:goalies].each do |player|
       %tr
@@ -199,17 +204,19 @@
         %td= player.goals_allowed
         %td= player.goalie_minutes
         %td= player.goals_allowed_per_possesion.round 4
+        %td= render "players/vote", :player => player
 
 %table.goalies
   %thead
     %tr
-      %th{:colspan => 5} Faceoff Specialists
+      %th{:colspan => 6} Faceoff Specialists
     %tr
       %th Name
       %th FO%
       %th Wins
       %th Losses
       %th TO/FO
+      %th Pos?
   %tbody
     - @roster[:fo].each do |player|
       %tr
@@ -218,5 +225,6 @@
         %td= player.faceoffs_won
         %td= player.faceoffs_lost
         %td= player.turnovers_per_faceoff.round 4
+        %td= render "players/vote", :player => player
         
 = link_to 'Back', "/overview/#{@year}"

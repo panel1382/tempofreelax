@@ -21,6 +21,7 @@ Tempofreelax::Application.routes.draw do
 
   resources :games
 
+  match 'votes/' => 'players#vote'
   match 'calendar/' => 'games#index'
   match 'calendar/:date' => 'games#index'
   match 'teams/page/:page' => 'teams#index'
@@ -34,6 +35,7 @@ Tempofreelax::Application.routes.draw do
   match 'stat/add' => 'stats#new'
   match 'stat/all' => 'stats#index'
   match 'player/:page/' => 'players#index'
+  match 'games/audit/:year' => 'games#audit'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
