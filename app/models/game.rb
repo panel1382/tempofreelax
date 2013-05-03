@@ -64,6 +64,13 @@ class Game < ActiveRecord::Base
     return a
   end
   
+  def remove_duplicates
+    if game_stats.length > 2
+       game_stats.each_with_index {|stat, i| stat.destroy if i > 1 } 
+    end
+    game_stats.length
+  end
+  
   def possessions(us)
     if us == :game
       p = possessions(:home) + possessions(:away)

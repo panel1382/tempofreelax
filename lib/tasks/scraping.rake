@@ -260,4 +260,8 @@ namespace :bg do
     puts "Goalie: #{a.pri_goalie}"
     puts a.position
   end
+  
+  task :removeDuplicates => :environment do
+    Game.all.each{|game| game.remove_duplicates}
+  end
 end
